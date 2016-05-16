@@ -1,11 +1,23 @@
 import matplotlib.pyplot as plt
-import numpy as np
+#import numpy as np
 
  #open model output file
-f = open('F:\canopy\brom_pics\output_240_day-april.dat', 'rb')
-f.read(1)
 
-print f
+f = open("output_240_day-april.dat","rb")
+for _ in range(3):         # skip 3 lines of heading 
+    line = f.readline()
+line = f.readline()
+foo = line.split()
+    
+f.close   
+print foo
+
+ 
+#for line in f:
+    
+            
+
+
 #Draw model results
 
 plt.figure(1)
