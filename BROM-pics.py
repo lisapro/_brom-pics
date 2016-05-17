@@ -1,11 +1,20 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
+d = {"i":""}
  #open model output file
-f = open('F:\canopy\brom_pics\output_240_day-april.dat', 'rb')
-f.read(1)
+f = open('output_240_day-april.dat', 'rb')
+for _ in range(2):
+    line = f.readline()
+line = f.readline()
+foo = line.split()
 
-print f
+for item in foo:
+    d[item] = ""
+
+print  d
+print
+print foo
+
 #Draw model results
 
 plt.figure(1)
