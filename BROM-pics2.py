@@ -1,0 +1,59 @@
+import matplotlib.pyplot as plt
+
+
+values=[]
+f = open('output_240_day-april.dat', 'rb')  #open model output file
+
+num_lines = sum(1 for l  in f)
+num = num_lines - 1                        # calculate number of lines 
+f.seek(0)                                  # return to the beginning of the file 
+
+for _ in range(1):                        # skip two unneeded lines 
+    line = f.readline()
+    
+for _ in range(num):
+    line = f.readline()                   # read line for heading
+    foo = line.split()
+    values.append(foo) 
+transposed = zip(*values)
+
+print transposed
+
+
+plt.figure(1)
+
+plt.subplot(311)
+plt.title('Water')            # subplot Temperature title
+plt.xlabel('$\mu$M') 
+plt.ylabel('M')
+plt.axis([0, 160, 0, 110])
+
+plt.subplot(312)
+plt.title('BBL')             # subplot 312 title
+plt.xlabel('mM')
+plt.ylabel('M')
+
+plt.subplot(313)
+plt.title('Sediment')        # subplot 313 title
+plt.xlabel('mM')
+plt.ylabel('Cm')
+
+
+#plt.show()
+
+
+temp = transposed[3][2:]
+s = transposed[4][2:] 
+
+plt.figure(2)
+plt.subplot(211)
+plt.title(transposed[0][3])            # subplot Temperature title
+plt.xlabel(temp)
+#plt.ylabel('y')
+#plt.axis(0,xaxis, 0, yaxis)
+plt.plot(temp, linewidth=2.0)
+
+plt.subplot(212)
+plt.plot(s, linewidth=2.0)
+plt.xlabel('s')
+plt.show()
