@@ -17,43 +17,78 @@ for _ in range(num):
     values.append(foo) 
 transposed = zip(*values)
 
-print transposed
 
-
-plt.figure(1)
-
-plt.subplot(311)
-plt.title('Water')            # subplot Temperature title
-plt.xlabel('$\mu$M') 
-plt.ylabel('M')
-plt.axis([0, 160, 0, 110])
-
-plt.subplot(312)
-plt.title('BBL')             # subplot 312 title
-plt.xlabel('mM')
-plt.ylabel('M')
-
-plt.subplot(313)
-plt.title('Sediment')        # subplot 313 title
-plt.xlabel('mM')
-plt.ylabel('Cm')
 
 
 #plt.show()
 
-
+depth = transposed[2][2:]
 temp = transposed[3][2:]
-s = transposed[4][2:] 
+sal = transposed[4][2:]
+templabel = transposed[3][0]
 
-plt.figure(2)
-plt.subplot(211)
-plt.title(transposed[0][3])            # subplot Temperature title
-plt.xlabel(temp)
-#plt.ylabel('y')
-#plt.axis(0,xaxis, 0, yaxis)
-plt.plot(temp, linewidth=2.0)
 
-plt.subplot(212)
-plt.plot(s, linewidth=2.0)
-plt.xlabel('s')
+
+
+fig1 = plt.figure()
+#plt.figure.SubplotParams(left=None, bottom=None, right=None, top=None, wspace=0.2, hspace=0.2)
+ax1 = fig1.add_subplot(311)
+#ax1.get_xaxis().get_major_formatter().set_useOffset(False)
+
+ax1.plot(temp,depth,'o-')
+ax1.set_xlabel('Temperature (C)',color='b')
+ax1.set_ylabel('Depth (m)')
+
+ax1.xaxis.set_label_position('top') # this moves the label to the top
+ax1.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax1.set_ylim(ax1.get_ylim()[::-1]) #this reverses the yaxis (i.e. deep at the bottom)
+
+
+ax2 = ax1.twiny()
+ax2.plot(sal, depth, 'ro-') 
+ax2.set_xlabel('Salinity(psu)', color='r') 
+ax2.xaxis.set_label_position('top') # this moves the label to the top
+ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
+
+
+#BBL
+ax1 = fig1.add_subplot(312)
+
+ax1.plot(temp,depth,'o-')
+ax1.set_xlabel('Temperature (C)',color='b')
+ax1.set_ylabel('Depth (m)')
+
+ax1.xaxis.set_label_position('top') # this moves the label to the top
+ax1.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax1.set_ylim(ax1.get_ylim()[::-1]) #this reverses the yaxis (i.e. deep at the bottom)
+
+
+ax2 = ax1.twiny()
+ax2.plot(sal, depth, 'ro-') 
+ax2.set_xlabel('Salinity(psu)', color='r') 
+ax2.xaxis.set_label_position('top') # this moves the label to the top
+ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
+
+
+
+#SEDIMENT
+ax1 = fig1.add_subplot(313)
+
+ax1.plot(temp,depth,'o-')
+ax1.set_xlabel('Temperature (C)',color='b')
+ax1.set_ylabel('Depth (m)')
+
+ax1.xaxis.set_label_position('top') # this moves the label to the top
+ax1.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax1.set_ylim(ax1.get_ylim()[::-1]) #this reverses the yaxis (i.e. deep at the bottom)
+
+
+ax2 = ax1.twiny()
+ax2.plot(sal, depth, 'ro-') 
+ax2.set_xlabel('Salinity(psu)', color='r') 
+ax2.xaxis.set_label_position('top') # this moves the label to the top
+ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
+
+
+
 plt.show()
