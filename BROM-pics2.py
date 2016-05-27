@@ -75,7 +75,7 @@ s2o3max = 200
 o2max = 400
 nh4max = 1600
 no2max = 1
-no3max = 10
+no3max = 100
 mnco3max = 8*1.e-8
 mnsmax = 0.02
 mn4max = 1
@@ -83,19 +83,17 @@ mn3max = 0.04
 mn2max = 1
 
 
-fig1 = plt.figure(figsize = (14,14))
+fig1 = plt.figure(figsize = (12,13))
 rect = 1,1,3,3
 fig1.add_axes(rect, label='axes1')
 
-gs = gridspec.GridSpec(3, 4,)
-gs.update(left=0.1, right=0.9,top = 0.85, wspace=0.3,hspace=0.2)
+gs = gridspec.GridSpec(3, 4)
+gs.update(left=0.08, right=0.95,top = 0.84,bottom = 0.05, wspace=0.35,hspace=0.2)
 
 
 
-ax4 = plt.subplot(gs[3])
-ax5 = plt.subplot(gs[4])
-ax6 = plt.subplot(gs[5])
-ax7 = plt.subplot(gs[6])
+
+
 ax8 = plt.subplot(gs[7])
 ax9 = plt.subplot(gs[8])
 ax10 = plt.subplot(gs[9])
@@ -176,7 +174,7 @@ ax23.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax23.set_xlim([0, h2smax])
 ax23.set_ylim([ymin_bbl, 0])
 
-#Water - 2/1 H2S
+#Water - 2/1 s2o3
 ax24 = ax2.twiny()
 for spinename, spine in ax24.spines.iteritems():
     if spinename != 'top':
@@ -272,7 +270,7 @@ ax43 = ax4.twiny()
 for spinename, spine in ax43.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
-ax43.spines['top'].set_position(('outward', 35))
+ax43.spines['top'].set_position(('outward', 32))
 ax43.plot(mn4, depth, 'b-',mn4, depth, 'b-') 
 ax43.set_xlabel('Mn IV', color='b',) 
 ax43.xaxis.set_label_position('top') # this moves the label to the top
@@ -298,72 +296,87 @@ ax45 = ax4.twiny()
 for spinename, spine in ax45.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
-ax45.spines['top'].set_position(('outward', 95))
+ax45.spines['top'].set_position(('outward', 96))
 ax45.plot(mnco3, depth, 'm-',mnco3, depth, 'm-') 
-ax45.set_xlabel('MnCo3', color='m',) 
+ax45.set_xlabel('MnCo3', color='y',) 
 ax45.xaxis.set_label_position('top') # this moves the label to the top
 ax45.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax45.set_xlim([0, mnco3max])
 ax45.set_ylim([ymin_bbl, 0])
 
-'''
-'''# BBL 1/2
-'''
-ax1 = fig1.add_subplot(334)
-ax1.plot(temp,depth,'o-',temp,depth,'o-')
-ax1.set_ylabel('Depth (m)')
-ax1.set_xlabel('BBL')
-ax1.xaxis.set_ticks_position('top') # this moves the ticks to the top
+
+
+## BBL 1/2
+ # BBL 1/2 - Temperature
+ax5 = plt.subplot(gs[4])
+ax5.plot(temp,depth,'bo-',temp,depth,'bo-')
+ax5.set_ylabel('Depth (m)')
+plt.setp(ax5.get_xticklabels(), visible=False)
+#ax5.set_xlabel('Temper')
+#ax5.xaxis.set_ticks_position('top') # this moves the ticks to the top
 #ax1.set_ylim(ax1.get_ylim()[::-1]) #this reverses the yaxis (i.e. deep at the bottom)
-ax1.set_xlim([5, 14])
-ax1.set_ylim([ymin_sed, ymin_bbl])
-
-ax2 = ax1.twiny()
-ax2.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
-ax2.set_xlim([33, 36])
-ax2.set_ylim([ymin_sed, ymin_bbl])
-
-ax3 = ax1.twiny()
-ax3.plot(kz, depth, 'go-',kz, depth, 'go-') 
+ax5.set_xlim([5, 14])
+ax5.set_ylim([ymin_sed, ymin_bbl])
+#BBL 1/2 - Salinity
+ax52 = ax5.twiny()
+ax52.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
+ax52.set_xlim([33, 36])
+ax52.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax52.get_xticklabels(), visible=False)
+#BBL 1/2 Kz
+ax53 = ax5.twiny()
+ax53.plot(kz, depth, 'go-',kz, depth, 'go-') 
 #ax3.set_xlim([33, 36])
-ax3.set_ylim([ymin_sed, ymin_bbl])
+ax53.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax53.get_xticklabels(), visible=False)
 
 
-
-'''# BBL 2/2 
-'''
-ax1 = fig1.add_subplot(335)
+# BBL 2/2 
+ax6 = plt.subplot(gs[5])
 # BBL - SO4
-ax1.plot(so4,depth,'b',so4,depth,'b')
-ax1.set_ylabel('Depth (m)')
-ax1.set_xlabel('BBL')
-ax1.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax1.set_xlim([20000, 26000])
-ax1.set_ylim([ymin_sed, ymin_bbl])
-ax2 = ax1.twiny()
-ax2.plot(sal, depth, 'r',sal, depth, 'r') 
-ax2.set_xlim([33, 36])
-ax2.set_ylim([ymin_sed, ymin_bbl])
+ax6.plot(so4,depth,'go-',so4,depth,'go-')
+ax6.set_ylabel('Depth (m)')
+#ax6.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax6.set_xlim([20000, so4max])
+ax6.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax6.get_xticklabels(), visible=False)
+#BBL -  2/2 S0
+ax62 = ax6.twiny()
+ax62.plot(s0, depth, 'ro-',s0, depth, 'ro-') 
+ax62.set_xlim([0, s0max])
+ax62.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax62.get_xticklabels(), visible=False)
 
-ax3 = ax1.twiny()
-ax3.plot(kz, depth, 'g',kz, depth, 'g') 
-#ax3.set_xlim([33, 36])
-ax3.set_ylim([ymin_sed, ymin_bbl])
+#BBL -  2/2 h2S
+ax63 = ax6.twiny()
+ax63.plot(h2s, depth, 'bo-',h2s, depth, 'bo-') 
+ax63.set_xlim([0, h2smax])
+ax63.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax63.get_xticklabels(), visible=False)
 
-''' #BBL 3/2
-''' 
-ax1 = fig1.add_subplot(336)
-ax1.plot(temp,depth,'o-',temp,depth,'o-')
-ax1.set_ylabel('Depth (m)')
-ax1.set_xlabel('BBL')
-ax1.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax1.set_xlim([5, 14])
-ax1.set_ylim([ymin_sed, ymin_bbl])
-ax2 = ax1.twiny()
-ax2.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
-ax2.set_xlim([33, 36])
-ax2.set_ylim([ymin_sed, ymin_bbl])
+ax64 = ax6.twiny()
+ax64.plot(s2o3, depth, 'mo-',s2o3, depth, 'mo-') 
+ax64.set_xlim([0, s2o3max])
+ax64.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax64.get_xticklabels(), visible=False)
 
+
+
+ #BBL 3/2
+ax7 = plt.subplot(gs[6])
+ax7.plot(o2,depth,'go-',o2,depth,'go-')
+ax7.set_ylabel('Depth (m)')
+#ax7.set_xlabel('BBL')
+ax7.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax7.set_xlim([0,o2max])
+ax7.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax7.get_xticklabels(), visible=False)
+
+ax71 = ax7.twiny()
+ax71.plot(nh4, depth, 'ro-',nh4, depth, 'ro-') 
+ax71.set_xlim([0, nh4max])
+ax71.set_ylim([ymin_sed, ymin_bbl])
+'''
 ax3 = ax1.twiny()
 ax3.plot(kz, depth, 'go-',kz, depth, 'go-') 
 #ax3.set_xlim([33, 36])
@@ -437,5 +450,6 @@ ax3.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax3.set_ylim([ymax_sed, ymin_sed])
 ###
 '''
+
 #plt.tight_layout()
 plt.show()
