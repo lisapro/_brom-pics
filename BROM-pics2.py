@@ -91,26 +91,29 @@ gs = gridspec.GridSpec(3, 4)
 gs.update(left=0.08, right=0.95,top = 0.84,bottom = 0.05, wspace=0.35,hspace=0.2)
 
 
-
-
-
-ax8 = plt.subplot(gs[7])
-ax9 = plt.subplot(gs[8])
-ax10 = plt.subplot(gs[9])
-ax11 = plt.subplot(gs[10])
-ax12 = plt.subplot(gs[11])
-
 ''' Water 1/1 '''
 ax1 = plt.subplot(gs[0])
 #Water Kz
 ax1.plot(kz, depth, 'go-',kz, depth, 'go-') # (111 = nxy)
-ax1.set_xlabel('Kz(m^2/sec)', color='g') 
+#ax1.set_xlabel('Kz(m^2/sec)', color='g') 
 ax1.set_ylabel('Depth (m)')
-ax1.xaxis.set_ticks_position('bottom') # this moves the ticks to the top
-ax1.xaxis.set_label_position('bottom') # this moves the ticks to the top
+#ax1.xaxis.set_ticks_position('bottom') # this moves the ticks to the top
+#ax1.xaxis.set_label_position('bottom') # this moves the ticks to the top
 ax1.set_xlim([0, 0.05])
 ax1.set_ylim([ymin_bbl, 0])
-
+plt.setp(ax1.get_xticklabels(), visible=False)
+#Double water Kz
+ax11 = ax1.twiny()
+for spinename, spine in ax11.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax11.spines['top'].set_position(('outward', 50))
+ax11.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
+ax11.set_xlabel('Kz', color='g') 
+ax11.xaxis.set_label_position('top') # this moves the label to the top
+ax11.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax11.set_xlim([0, 0.05])
+ax11.set_ylim([ymin_bbl, 0])
 #Water Salinity  
 ax12 = ax1.twiny()
 for spinename, spine in ax12.spines.iteritems():
@@ -354,102 +357,73 @@ ax63.set_xlim([0, h2smax])
 ax63.set_ylim([ymin_sed, ymin_bbl])
 plt.setp(ax63.get_xticklabels(), visible=False)
 
+#BBL -  2/2 s2o3
 ax64 = ax6.twiny()
 ax64.plot(s2o3, depth, 'mo-',s2o3, depth, 'mo-') 
 ax64.set_xlim([0, s2o3max])
 ax64.set_ylim([ymin_sed, ymin_bbl])
 plt.setp(ax64.get_xticklabels(), visible=False)
 
-
-
- #BBL 3/2
+##BBL 3/2
 ax7 = plt.subplot(gs[6])
+#BBL 3/2 - o2
 ax7.plot(o2,depth,'go-',o2,depth,'go-')
 ax7.set_ylabel('Depth (m)')
-#ax7.set_xlabel('BBL')
-ax7.xaxis.set_ticks_position('top') # this moves the ticks to the top
+plt.setp(ax7.get_xticklabels(), visible=False)
 ax7.set_xlim([0,o2max])
 ax7.set_ylim([ymin_sed, ymin_bbl])
-plt.setp(ax7.get_xticklabels(), visible=False)
+#BBL 3/2 - nh4
+ax72 = ax7.twiny()
+ax72.plot(nh4, depth, 'ro-',nh4, depth, 'ro-') 
+ax72.set_xlim([0, nh4max])
+ax72.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax72.get_xticklabels(), visible=False)
+#BBL 3\2 - no2
+ax73 = ax7.twiny()
+ax73.plot(no2, depth, 'b-',no2, depth, 'b-') 
+ax73.set_xlim([0, no2max])
+ax73.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax73.get_xticklabels(), visible=False)
+#BBL - 3/2 NO3
+ax74 = ax7.twiny()
+ax74.set_xlim([0, no3max])
+ax74.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax74.get_xticklabels(), visible=False)
 
-ax71 = ax7.twiny()
-ax71.plot(nh4, depth, 'ro-',nh4, depth, 'ro-') 
-ax71.set_xlim([0, nh4max])
-ax71.set_ylim([ymin_sed, ymin_bbl])
-'''
-ax3 = ax1.twiny()
-ax3.plot(kz, depth, 'go-',kz, depth, 'go-') 
-#ax3.set_xlim([33, 36])
-ax3.set_ylim([ymin_sed, ymin_bbl])
+##BBL - 4/2
+ax8 = plt.subplot(gs[7])
+#BBL - 4/2 - Mn II
+ax8.plot(mn2,depth,'go-',mn2,depth,'go-')
+ax8.set_ylabel('Depth (m)')
+plt.setp(ax8.get_xticklabels(), visible=False)
+ax8.set_xlim([0,mn2max])
+ax8.set_ylim([ymin_sed, ymin_bbl])
 
-'''#Sediment 1/3 
-'''
-ax1 = fig1.add_subplot(337)
-ax1.plot(temp,depth,'o-',temp,depth,'o-')
-ax1.set_ylabel('Depth (m)')
-ax1.set_xlabel('Sediment')
-#ax1.xaxis.set_label_position('top') # this moves the label to the top
-ax1.set_xlim([5, 14])
-ax1.set_ylim([ymax_sed, ymin_sed])
+#BBL - 4/2 - Mn III
+ax82 = ax8.twiny()
+ax82.plot(mn3, depth, 'ro-',mn3, depth, 'ro-') 
+ax82.set_xlim([0, mn3max])
+ax82.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax82.get_xticklabels(), visible=False)
+#BBL 4\2 - mn IV
+ax83 = ax8.twiny()
+ax83.plot(mn4, depth, 'b-',mn4, depth, 'b-') 
+ax83.set_xlim([0, mn4max])
+ax83.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax83.get_xticklabels(), visible=False)
+#BBL - 4/2 MnS
+ax84 = ax8.twiny()
+ax84.set_xlim([0, mnsmax])
+ax84.set_ylim([ymin_sed, ymin_bbl])
+plt.setp(ax84.get_xticklabels(), visible=False)
 
-ax2 = ax1.twiny()
-ax2.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
-ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax2.set_xlim([33, 36])
-ax2.set_ylim([ymax_sed, ymin_sed])
 
-ax3 = ax1.twiny()
-ax3.plot(kz, depth, 'go-',kz, depth, 'go-') 
-ax3.xaxis.set_ticks_position('top') # this moves the ticks to the top
-#ax3.set_xlim([33, 36])
-ax3.set_ylim([ymax_sed, ymin_sed])
 
-'''#Sediment  2/3 
-'''
-ax1 = fig1.add_subplot(338)
-# Sediment - SO4 
-ax1.plot(so4,depth,'b',so4,depth,'b')
-ax1.set_ylabel('Depth (m)')
-ax1.set_xlabel('Sediment')
-#ax1.xaxis.set_label_position('top') # this moves the label to the top
-ax1.set_xlim([20000, 26000])
-ax1.set_ylim([ymax_sed, ymin_sed])
 
-ax2 = ax1.twiny()
-ax2.plot(sal, depth, 'r',sal, depth, 'r') 
-ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax2.set_xlim([33, 36])
-ax2.set_ylim([ymax_sed, ymin_sed])
 
-ax3 = ax1.twiny()
-ax3.plot(kz, depth, 'g',kz, depth, 'g') 
-ax3.xaxis.set_ticks_position('top') # this moves the ticks to the top
-#ax3.set_xlim([33, 36])
-ax3.set_ylim([ymax_sed, ymin_sed])
-
-'''#Sediment  3/3 
-'''
-ax1 = fig1.add_subplot(339)
-ax1.plot(temp,depth,'o-',temp,depth,'o-')
-ax1.set_ylabel('Depth (m)')
-ax1.set_xlabel('Sediment')
-#ax1.xaxis.set_label_position('top') # this moves the label to the top
-ax1.set_xlim([5, 14])
-ax1.set_ylim([ymax_sed, ymin_sed])
-
-ax2 = ax1.twiny()
-ax2.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
-ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax2.set_xlim([33, 36])
-ax2.set_ylim([ymax_sed, ymin_sed])
-
-ax3 = ax1.twiny()
-ax3.plot(kz, depth, 'go-',kz, depth, 'go-') 
-ax3.xaxis.set_ticks_position('top') # this moves the ticks to the top
-#ax3.set_xlim([33, 36])
-ax3.set_ylim([ymax_sed, ymin_sed])
-###
-'''
-
+ax9 = plt.subplot(gs[8])
+ax10 = plt.subplot(gs[9])
+ax11 = plt.subplot(gs[10])
+ax12 = plt.subplot(gs[11])
 #plt.tight_layout()
 plt.show()
