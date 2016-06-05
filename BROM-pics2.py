@@ -88,17 +88,14 @@ rect = 1,1,3,3
 fig1.add_axes(rect, label='axes1')
 
 gs = gridspec.GridSpec(3, 4)
-gs.update(left=0.08, right=0.95,top = 0.84,bottom = 0.05, wspace=0.35,hspace=0.2)
+gs.update(left=0.08, right=0.95,top = 0.815,bottom = 0.05, wspace=0.35,hspace=0.2)
 
 
 ''' Water 1/1 '''
 ax1 = plt.subplot(gs[0])
 #Water Kz
 ax1.plot(kz, depth, 'go-',kz, depth, 'go-') # (111 = nxy)
-#ax1.set_xlabel('Kz(m^2/sec)', color='g') 
 ax1.set_ylabel('Depth (m)')
-#ax1.xaxis.set_ticks_position('bottom') # this moves the ticks to the top
-#ax1.xaxis.set_label_position('bottom') # this moves the ticks to the top
 ax1.set_xlim([0, 0.05])
 ax1.set_ylim([ymin_bbl, 0])
 plt.setp(ax1.get_xticklabels(), visible=False)
@@ -107,7 +104,7 @@ ax11 = ax1.twiny()
 for spinename, spine in ax11.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
-ax11.spines['top'].set_position(('outward', 50))
+ax11.spines['top'].set_position(('outward', 60))
 ax11.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
 ax11.set_xlabel('Kz', color='g') 
 ax11.xaxis.set_label_position('top') # this moves the label to the top
@@ -143,14 +140,20 @@ ax13.set_ylim([ymin_bbl, 0])
 ax2 = plt.subplot(gs[1])
 #Water - 2/1 SO4
 ax2.plot(so4,depth,'go-',so4,depth,'go-')
-ax2.set_xlabel('SO4',color = 'g')
+
 ax2.set_ylabel('Depth (m)')
-ax2.xaxis.set_label_position('bottom') # this moves the label to the top
-ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
+#ax2.xaxis.set_label_position('bottom') # this moves the label to the top
+#ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax2.set_xlim([20000, so4max])
 ax2.set_ylim([ymin_bbl, 0])
-ax2.set_xticks(np.arange(20000,27000,2000))
-
+plt.setp(ax2.get_xticklabels(), visible=False)
+#ax2.set_xticks(np.arange(20000,so4max,2000))
+ax21 = ax2.twiny()
+for spinename, spine in ax21.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax21.spines['top'].set_position(('outward', 90))
+ax21.set_xlabel('SO4',color = 'g')
 #Water -  2/1 S0
 ax22 = ax2.twiny()
 for spinename, spine in ax22.spines.iteritems():
@@ -194,14 +197,16 @@ ax24.set_ylim([ymin_bbl, 0])
 ax3 = plt.subplot(gs[2])
 #Water -  3/1 O2
 ax3.plot(o2,depth,'g-',o2,depth,'g-')
-ax3.set_xlabel('O2',color = 'g')
 ax3.set_ylabel('Depth (m)')
-ax3.xaxis.set_label_position('bottom') # this moves the label to the top
-ax3.xaxis.set_ticks_position('bottom') # this moves the ticks to the top
-#ax1.set_ylim(ax1.get_ylim()[::-1]) #this reverses the yaxis (i.e. deep at the bottom)
-ax3.set_xlim([0, o2max])
+plt.setp(ax3.get_xticklabels(), visible=False)
 ax3.set_ylim([ymin_bbl, 0])
-
+ax31 = ax3.twiny()
+for spinename, spine in ax31.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax31.spines['top'].set_position(('outward', 90))
+ax31.set_xlim([0, o2max])
+ax31.set_xlabel('O2',color = 'g')
 #Water -  3/1 - NH4
 ax32 = ax3.twiny()
 for spinename, spine in ax32.spines.iteritems():
@@ -246,14 +251,21 @@ ax34.set_ylim([ymin_bbl, 0])
 ax4 = plt.subplot(gs[3])
 #Water -  4/1 MnII
 ax4.plot(mn2,depth,'g-',mn2,depth,'g-')
-ax4.set_xlabel('Mn II',color = 'g')
+
 ax4.set_ylabel('Depth (m)')
 ax4.xaxis.set_label_position('bottom') # this moves the label to the top
 ax4.xaxis.set_ticks_position('bottom') # this moves the ticks to the top
 #ax1.set_ylim(ax1.get_ylim()[::-1]) #this reverses the yaxis (i.e. deep at the bottom)
-ax4.set_xlim([0, mn2max])
-ax4.set_ylim([ymin_bbl, 0])
 
+ax4.set_ylim([ymin_bbl, 0])
+ax41 = ax4.twiny()
+for spinename, spine in ax41.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+
+ax41.spines['top'].set_position(('outward', 125))
+ax41.set_xlim([0, mn2max])
+ax41.set_xlabel('Mn II',color = 'g')
 #Water -  4/1 - Mn III
 ax42 = ax4.twiny()
 for spinename, spine in ax42.spines.iteritems():
@@ -418,12 +430,14 @@ ax84.set_ylim([ymin_sed, ymin_bbl])
 plt.setp(ax84.get_xticklabels(), visible=False)
 
 
-
-
-
+#Sediment - 1/3 
 ax9 = plt.subplot(gs[8])
+#Sediment - 2/3 
 ax10 = plt.subplot(gs[9])
+#Sediment - 3/3
 ax11 = plt.subplot(gs[10])
+#Sediment - 4/3 
 ax12 = plt.subplot(gs[11])
+
 #plt.tight_layout()
 plt.show()
