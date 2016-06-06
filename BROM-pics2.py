@@ -87,8 +87,8 @@ fig1 = plt.figure(figsize = (12,13))
 rect = 1,1,3,3
 fig1.add_axes(rect, label='axes1')
 
-gs = gridspec.GridSpec(3, 4)
-gs.update(left=0.08, right=0.95,top = 0.815,bottom = 0.05, wspace=0.35,hspace=0.2)
+gs = gridspec.GridSpec(2, 4)
+gs.update(left=0.08, right=0.95,top = 0.815,bottom = 0.4, wspace=0.2,hspace=0.1)
 
 
 ''' Water 1/1 '''
@@ -141,7 +141,7 @@ ax2 = plt.subplot(gs[1])
 #Water - 2/1 SO4
 ax2.plot(so4,depth,'go-',so4,depth,'go-')
 
-ax2.set_ylabel('Depth (m)')
+#ax2.set_ylabel('Depth (m)')
 #ax2.xaxis.set_label_position('bottom') # this moves the label to the top
 #ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax2.set_xlim([20000, so4max])
@@ -196,8 +196,8 @@ ax24.set_ylim([ymin_bbl, 0])
 #Water 3/1 
 ax3 = plt.subplot(gs[2])
 #Water -  3/1 O2
-ax3.plot(o2,depth,'g-',o2,depth,'g-')
-ax3.set_ylabel('Depth (m)')
+ax3.plot(o2,depth,'go-',o2,depth,'go-')
+#ax3.set_ylabel('Depth (m)')
 plt.setp(ax3.get_xticklabels(), visible=False)
 ax3.set_ylim([ymin_bbl, 0])
 ax31 = ax3.twiny()
@@ -213,7 +213,7 @@ for spinename, spine in ax32.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax32.spines['top'].set_position(('outward', 0))
-ax32.plot(nh4,depth,'r-',nh4,depth,'r-') 
+ax32.plot(nh4,depth,'ro-',nh4,depth,'ro-') 
 ax32.xaxis.set_label_position('top') # this moves the label to the top
 ax32.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax32.set_xlabel('NH4', color='r',) 
@@ -221,13 +221,13 @@ ax32.set_xlim([0, nh4max])
 #ax32.set_xticks(np.arange(0,1500,500))
 ax32.set_ylim([ymin_bbl, 0])
 
-#Water -  3/1 NO2
+#Water -  3/1 NO2 
 ax33 = ax3.twiny()
 for spinename, spine in ax33.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax33.spines['top'].set_position(('outward', 32))
-ax33.plot(no2, depth, 'b-',no2, depth, 'b-') 
+ax33.plot(no2, depth, 'bo-',no2, depth, 'bo-') 
 ax33.set_xlabel('NO2', color='b',) 
 ax33.xaxis.set_label_position('top') # this moves the label to the top
 ax33.xaxis.set_ticks_position('top') # this moves the ticks to the top
@@ -240,7 +240,7 @@ for spinename, spine in ax34.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax34.spines['top'].set_position(('outward', 65))
-ax34.plot(no3, depth, 'm-',no3, depth, 'm-') 
+ax34.plot(no3, depth, 'mo-',no3, depth, 'mo-') 
 ax34.set_xlabel('NO3', color='m',) 
 ax34.xaxis.set_label_position('top') # this moves the label to the top
 ax34.xaxis.set_ticks_position('top') # this moves the ticks to the top
@@ -251,12 +251,11 @@ ax34.set_ylim([ymin_bbl, 0])
 ax4 = plt.subplot(gs[3])
 #Water -  4/1 MnII
 ax4.plot(mn2,depth,'g-',mn2,depth,'g-')
-
-ax4.set_ylabel('Depth (m)')
-ax4.xaxis.set_label_position('bottom') # this moves the label to the top
-ax4.xaxis.set_ticks_position('bottom') # this moves the ticks to the top
+#ax4.set_ylabel('Depth (m)')
+#ax4.xaxis.set_label_position('bottom') # this moves the label to the top
+#ax4.xaxis.set_ticks_position('bottom') # this moves the ticks to the top
 #ax1.set_ylim(ax1.get_ylim()[::-1]) #this reverses the yaxis (i.e. deep at the bottom)
-
+plt.setp(ax4.get_xticklabels(), visible=False)
 ax4.set_ylim([ymin_bbl, 0])
 ax41 = ax4.twiny()
 for spinename, spine in ax41.spines.iteritems():
@@ -327,9 +326,6 @@ ax5 = plt.subplot(gs[4])
 ax5.plot(temp,depth,'bo-',temp,depth,'bo-')
 ax5.set_ylabel('Depth (m)')
 plt.setp(ax5.get_xticklabels(), visible=False)
-#ax5.set_xlabel('Temper')
-#ax5.xaxis.set_ticks_position('top') # this moves the ticks to the top
-#ax1.set_ylim(ax1.get_ylim()[::-1]) #this reverses the yaxis (i.e. deep at the bottom)
 ax5.set_xlim([5, 14])
 ax5.set_ylim([ymin_sed, ymin_bbl])
 #BBL 1/2 - Salinity
@@ -350,8 +346,6 @@ plt.setp(ax53.get_xticklabels(), visible=False)
 ax6 = plt.subplot(gs[5])
 # BBL - SO4
 ax6.plot(so4,depth,'go-',so4,depth,'go-')
-ax6.set_ylabel('Depth (m)')
-#ax6.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax6.set_xlim([20000, so4max])
 ax6.set_ylim([ymin_sed, ymin_bbl])
 plt.setp(ax6.get_xticklabels(), visible=False)
@@ -380,7 +374,7 @@ plt.setp(ax64.get_xticklabels(), visible=False)
 ax7 = plt.subplot(gs[6])
 #BBL 3/2 - o2
 ax7.plot(o2,depth,'go-',o2,depth,'go-')
-ax7.set_ylabel('Depth (m)')
+#ax7.set_ylabel('Depth (m)')
 plt.setp(ax7.get_xticklabels(), visible=False)
 ax7.set_xlim([0,o2max])
 ax7.set_ylim([ymin_sed, ymin_bbl])
@@ -406,7 +400,6 @@ plt.setp(ax74.get_xticklabels(), visible=False)
 ax8 = plt.subplot(gs[7])
 #BBL - 4/2 - Mn II
 ax8.plot(mn2,depth,'go-',mn2,depth,'go-')
-ax8.set_ylabel('Depth (m)')
 plt.setp(ax8.get_xticklabels(), visible=False)
 ax8.set_xlim([0,mn2max])
 ax8.set_ylim([ymin_sed, ymin_bbl])
@@ -429,15 +422,130 @@ ax84.set_xlim([0, mnsmax])
 ax84.set_ylim([ymin_sed, ymin_bbl])
 plt.setp(ax84.get_xticklabels(), visible=False)
 
+gs1 = gridspec.GridSpec(1, 4)
+gs1.update(left=0.08, right=0.95, top = 0.30, bottom = 0.05, wspace=0.2,hspace=0.9)
 
 #Sediment - 1/3 
-ax9 = plt.subplot(gs[8])
+#ax9 = plt.subplot(gs1[0])
+ax9 = plt.subplot(gs1[0,0])
+#ax9.plot(kz,depth,'go-',kz,depth,'go-')
+ax9.set_ylabel('Depth (m)')
+#plt.setp(ax5.get_xticklabels(), visible=False)
+#ax9.set_xlim([0, 0.05])
+#ax9.set_ylim([ymax_sed, ymin_sed])
+plt.setp(ax9.get_xticklabels(), visible=False)
+
+#Double sediment Kz
+ax91 = ax9.twiny()
+for spinename, spine in ax91.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax91.spines['top'].set_position(('outward', 60))
+ax91.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
+ax91.set_xlabel('Kz', color='g') 
+ax91.xaxis.set_label_position('top') # this moves the label to the top
+ax91.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax91.set_xlim([0, 0.05])
+ax91.set_ylim([ymax_sed, ymin_sed])
+
+#Sediment - 1/4 SAlinity
+ax92 = ax9.twiny()
+for spinename, spine in ax92.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax92.spines['top'].set_position(('outward', 0))
+ax92.plot(sal, depth, 'ro-',sal, depth, 'ro-') 
+ax92.set_xlabel('Salinity(psu)', color='r') 
+ax92.xaxis.set_label_position('top') # this moves the label to the top
+ax92.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax92.set_xlim([33, salmax])
+ax92.set_ylim([ymax_sed, ymin_sed])
+#Sediment Temperature
+
+ax93 = ax9.twiny()
+for spinename, spine in ax93.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax93.spines['top'].set_position(('outward', 32))
+ax93.plot(temp,depth,'bo-',temp,depth,'bo-')
+ax93.set_xlabel('Temperature(C)', color = 'b')
+ax93.xaxis.set_label_position('top') # this moves the label to the top
+ax93.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax93.set_xlim([5, 14])
+ax93.set_ylim([ymax_sed, ymin_sed])
+
 #Sediment - 2/3 
-ax10 = plt.subplot(gs[9])
+ax10 = plt.subplot(gs1[0, 1])
+
+ax10.plot(so4,depth,'go-',so4,depth,'go-')
+#ax2.set_ylabel('Depth (m)')
+#ax2.xaxis.set_label_position('bottom') # this moves the label to the top
+#ax2.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax10.set_xlim([20000, so4max])
+ax10.set_ylim([ymax_sed, ymin_sed])
+plt.setp(ax10.get_xticklabels(), visible=False)
+#ax2.set_xticks(np.arange(20000,so4max,2000))
+ax101 = ax10.twiny()
+for spinename, spine in ax101.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax101.spines['top'].set_position(('outward', 90))
+ax101.set_xlabel('SO4',color = 'g')
+#Water -  2/1 S0
+ax102 = ax10.twiny()
+for spinename, spine in ax102.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax102.spines['top'].set_position(('outward', 0))
+ax102.plot(s0,depth,'ro-',s0,depth,'ro-') 
+ax102.xaxis.set_label_position('top') # this moves the label to the top
+ax102.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax102.set_xlabel('S0', color='r',) 
+ax102.set_xlim([0, s0max ])
+ax102.set_ylim([ymax_sed, ymin_sed])
+
+#Water -  2/1 H2S
+ax103 = ax10.twiny()
+for spinename, spine in ax103.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax103.spines['top'].set_position(('outward', 32))
+ax103.plot(h2s, depth, 'bo-',h2s, depth, 'bo-') 
+ax103.set_xlabel('H2S', color='b',) 
+ax103.xaxis.set_label_position('top') # this moves the label to the top
+ax103.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax103.set_xlim([0, h2smax])
+ax103.set_ylim([ymax_sed, ymin_sed])
+
+#Water - 2/1 s2o3
+ax104 = ax10.twiny()
+for spinename, spine in ax104.spines.iteritems():
+    if spinename != 'top':
+        spine.set_visible(False)
+ax104.spines['top'].set_position(('outward', 65))
+ax104.plot(s2o3, depth, 'mo-',s2o3, depth, 'mo-') 
+ax104.set_xlabel('S2O3', color='m',) 
+ax104.xaxis.set_label_position('top') # this moves the label to the top
+ax104.xaxis.set_ticks_position('top') # this moves the ticks to the top
+ax104.set_xlim([0, s2o3max])
+ax104.set_ylim([ymax_sed, ymin_sed])
+
+
+
+
+
+
+
+
+
+
+
+
 #Sediment - 3/3
-ax11 = plt.subplot(gs[10])
+ax11 = plt.subplot(gs1[0,2])
 #Sediment - 4/3 
-ax12 = plt.subplot(gs[11])
+ax12 = plt.subplot(gs1[0,3])
 
 #plt.tight_layout()
+
 plt.show()
