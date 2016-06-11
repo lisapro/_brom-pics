@@ -8,7 +8,7 @@ import matplotlib as mpl
 style.use('ggplot')
 
 values=[]                                  # create empty matrix for storing data
-f = open('output_240_day.dat', 'rb')       #open model output file, 'read binary' 
+f = open('output_100_day.dat', 'rb')       #open model output file, 'read binary' 
 
 num_lines = sum(1 for l  in f)
 num = num_lines - 1                        # calculate number of lines 
@@ -25,7 +25,7 @@ for _ in range(num):
     foo = line.split()
     values.append(foo) 
 data = zip(*values)                       #transpose the matrix of data
-
+#print data
 #Variables to plot:
 depth = data[2][2:]
 temp = data[3][2:]
@@ -64,6 +64,13 @@ bhan = data[37][2:]
 caco3 = data[38][2:]
 fes2 = data[39][2:] 
 ch4 = data[40][2:]
+pH = data[55][2:]
+pco2 = data[56][2:]
+om_ca = data[58][2:]
+om_ar = data[59][2:]
+co3 = data[60][2:]
+ca = data[61][2:]
+
 
 #limits for Water,BBL, and Sediment
 #y2max = 107
@@ -115,9 +122,15 @@ fe2max = 5
 ch4max = 1
 dicmax = 10
 alkmax = 10
-si = data[32][2:] 
-si_part = data[33][2:]
-
+simax = 10 
+si_partmax = 10
+ch4max = 10
+pHmax = 10
+pco2max = 10
+om_camax = 10
+om_armax = 10
+co3max = 10
+camax = 10
 #limits for x Sediment axes:
 sed_kz = 1
 sed_tempmin = 5
@@ -154,7 +167,15 @@ sed_fe2max = 100
 sed_ch4max = 10
 sed_dicmax = 10
 sed_alkmax = 10
-
+sed_simax = 10 
+sed_si_partmax = 10
+sed_ch4max = 10
+sed_pHmax = 10
+sed_pco2max = 10
+sed_om_camax = 10
+sed_om_armax = 10
+sed_co3max = 10
+sed_camax = 10
 #positions for axes
 axis1 = 0
 axis2 = 25
@@ -164,11 +185,15 @@ axis5 = 100
 
 labelaxis_x =  1.10
 labelaxis1_y = 1.02
-labelaxis2_y = 1.14
-labelaxis3_y = 1.25
-labelaxis4_y = 1.38
-labelaxis5_y = 1.50
+labelaxis2_y = 1.15
+labelaxis3_y = 1.28
+labelaxis4_y = 1.40
+labelaxis5_y = 1.52
 
+
+####################################
+############# Figure 1 ############# 
+####################################
 
 fig1 = plt.figure(figsize = (15,13))
 rect = 1,1,3,3
@@ -964,21 +989,7 @@ ax33.set_ylim([y1max, 0])
 ax33.annotate('DON', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='b')   
-#Fig2 Water - 3/1 NO3
-'''ax34 = ax3.twiny()
-for spinename, spine in ax34.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax34.spines['top'].set_position(('outward', axis4))
-ax34.spines['top'].set_color('m')
-ax34.plot(no3, depth, 'mo-',no3, depth, 'mo-') 
-ax34.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax34.set_xlim([0, no3max])
-ax34.set_ylim([y1max, 0])
-ax34.annotate('NO3', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='m')   
-'''
+
 #Fig2 Water - 4/1 
 ax4 = plt.subplot(gs[3])
 #Fig2 Water -  4/1 FeII
@@ -1043,24 +1054,7 @@ ax44.annotate('FeS2', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='m') 
 
-'''#Fig2 Water - 3/1 MnCO3
-ax45 = ax4.twiny()
-for spinename, spine in ax45.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax45.spines['top'].set_position(('outward', axis5))
-ax45.spines['top'].set_color('y')
-ax45.plot(mnco3, depth, 'yo-',mnco3, depth, 'yo-') 
-#ax45.set_xlabel('MnCo3', color='y',) 
-ax45.xaxis.set_label_position('top') # this moves the label to the top
-ax45.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax45.set_xlim([0, mnco3max])
-ax45.set_xticks(np.arange(0,mnco3max+mnco3max/2,mnco3max/2))
-ax45.set_ylim([y1max, 0])
-ax45.annotate('MnCO3', xy=(labelaxis_x,labelaxis5_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='y') 
-'''
+
 ##Fig2  BBL 1/2
  #Fig2  BBL 1/2 - Phyto
 ax5 = plt.subplot(gs[4])
@@ -1075,13 +1069,6 @@ ax52.plot(het, depth, 'ro-',het, depth, 'ro-')
 ax52.set_xlim([0, hetmax])
 ax52.set_ylim([y2max, y2min])
 plt.setp(ax52.get_xticklabels(), visible=False)
-'''#Fig2 BBL 1/2 Kz
-ax53 = ax5.twiny()
-ax53.plot(kz, depth, 'go-',kz, depth, 'go-') 
-ax3.set_xlim([kzmin, kzmax])
-ax53.set_ylim([y2max, y2min])
-plt.setp(ax53.get_xticklabels(), visible=False)
-'''
 
 #Fig2  BBL 2/2 
 ax6 = plt.subplot(gs[5])
@@ -1131,13 +1118,6 @@ ax73.plot(don, depth, 'b-',don, depth, 'b-')
 ax73.set_xlim([0, donmax])
 ax73.set_ylim([y2max, y2min])
 plt.setp(ax73.get_xticklabels(), visible=False)
-#Fig2 BBL - 3/2 NO3
-'''ax74 = ax7.twiny()
-ax74.plot(no3, depth, 'mo-',no3, depth, 'mo-') 
-ax74.set_xlim([0, no3max])
-ax74.set_ylim([y2max, y2min])
-plt.setp(ax74.get_xticklabels(), visible=False)
-'''
 
 ##Fig2 BBL - 4/2
 ax8 = plt.subplot(gs[7])
@@ -1165,13 +1145,7 @@ ax84.plot(fes2, depth, 'mo-',fes2, depth, 'mo-')
 ax84.set_xlim([0, fes2max])
 ax84.set_ylim([y2max, y2min])
 plt.setp(ax84.get_xticklabels(), visible=False)
-'''#Fig2 BBL - 4/2 MnCO3
-ax85 = ax8.twiny()
-ax85.plot(mnco3, depth, 'yo-',mnco3, depth, 'yo-') 
-ax85.set_xlim([-mnco3max, mnco3max])
-ax85.set_ylim([y2max, y2min])
-plt.setp(ax85.get_xticklabels(), visible=False)
-'''
+
 gs1 = gridspec.GridSpec(1, 4)
 gs1.update(left=0.08, right=0.92, top = 0.25, bottom = 0.05, wspace=0.65,hspace=0.9)
 
@@ -1208,21 +1182,7 @@ ax92.set_ylim([y3max, y3min])
 ax92.annotate('Het', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='r') 
-'''#Fig2 Sediment 1/3 Phy
-ax93 = ax9.twiny()
-for spinename, spine in ax93.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax93.spines['top'].set_position(('outward', axis3))
-ax93.spines['top'].set_color('b')
-ax93.plot(phy,depth,'bo-',phy,depth,'bo-')
-ax93.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax93.set_xlim([5, 14])
-ax93.set_ylim([y3max, y3min])
-ax93.annotate('Phy', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='b') 
-            '''
+
 #Fig2 Sediment - 2/3 Baan
 ax10 = plt.subplot(gs1[0, 1])
 ax10.set_ylim([y3max, y3min])
@@ -1405,7 +1365,7 @@ label_size = 13
 mpl.rcParams['xtick.labelsize'] = label_size
 mpl.rcParams['lines.linewidth'] = 2
 
-''' Water 1/1 '''
+# Water 1/1
 ax1 = plt.subplot(gs[0])
 #fig 3 Water 1/1
 ax1.set_ylabel('Depth (m)')
@@ -1418,31 +1378,31 @@ for spinename, spine in ax11.spines.iteritems():
         spine.set_visible(False)
 ax11.spines['top'].set_position(('outward', axis1))
 ax11.spines['top'].set_color('g')
-ax11.plot(ch4, depth, 'g-',ch4, depth, 'g-') 
+ax11.plot(pH, depth, 'g-',pH, depth, 'g-') 
 ax11.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax11.set_xlim([0, hetmax])
+ax11.set_xlim([0, pHmax])
 ax11.set_ylim([y1max, 0])
-ax11.annotate('Het', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
+ax11.annotate('pH', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='g')
-#fig 3 Water Phytoplankton
+#fig 3 Water pCO2
 ax12 = ax1.twiny()
 for spinename, spine in ax12.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax12.spines['top'].set_position(('outward', axis2))
 ax12.spines['top'].set_color('r')
-ax12.plot(phy, depth, 'r-',phy, depth, 'r-') 
+ax12.plot(pco2, depth, 'r-',pco2, depth, 'r-') 
 ax12.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax12.set_xlim([0, phymax])
+ax12.set_xlim([0, pco2max])
 ax12.set_ylim([y1max, 0])
-ax12.annotate('Phy', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
+ax12.annotate('pCO2', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='r')
                     
 #fig 3 Water 2/1   
 ax2 = plt.subplot(gs[1])
-#fig 3 Water - 2/1 Bacteria autotropohic anaerobic Baan
+#fig 3 Water - 2/1 Alk
 ax2.set_ylim([y1max, 0])
 plt.setp(ax2.get_xticklabels(), visible=False)
 #ax2.set_xticks(np.arange(20000,so4max,2000))
@@ -1452,127 +1412,66 @@ for spinename, spine in ax21.spines.iteritems():
         spine.set_visible(False)        
 ax21.spines['top'].set_position(('outward', axis1)) #move 
 ax21.spines['top'].set_color('g')
-ax21.plot(baan,depth,'g-',baan,depth,'g-')
-ax21.set_xlim([0, baanmax])
-ax21.annotate('Baan', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
+ax21.plot(alk,depth,'g-',alk,depth,'g-')
+ax21.set_xlim([0, alkmax])
+ax21.annotate('Alk', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='g')
 
-#fig 3 Water -  2/1 Bacteria heterotropohic anaerobic Bhan
+#fig 3 Water -  2/1 DIC
 ax22 = ax2.twiny()
 for spinename, spine in ax22.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax22.spines['top'].set_position(('outward', axis2))
 ax22.spines['top'].set_color('r')
-ax22.plot(bhan,depth,'r-',bhan,depth,'r-') 
+ax22.plot(dic,depth,'r-',dic,depth,'r-') 
 ax22.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax22.set_xlim([0, bhanmax ])
+ax22.set_xlim([0, dicmax ])
 ax22.set_ylim([y1max, 0])
-ax21.annotate('Bhan', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
+ax21.annotate('DIC', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='r')
-'''
-#fig 3 Water -  2/1 Bacteria heterotropohic aerobic Bhae
-ax23 = ax2.twiny()
-for spinename, spine in ax23.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax23.spines['top'].set_position(('outward', axis3))
-ax23.spines['top'].set_color('b')
-ax23.plot(bhae, depth, 'b-',bhae, depth, 'b-') 
-ax23.annotate('Bhae', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='b')
-ax23.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax23.set_xlim([0, bhaemax])
-ax23.set_ylim([y1max, 0])
 
-#fig 3 Water - 2/1 Bacteria autotropohic aerobic Baae
-ax24 = ax2.twiny()
-for spinename, spine in ax24.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax24.spines['top'].set_position(('outward', axis4))
-ax24.spines['top'].set_color('m')
-ax24.plot(baae, depth, 'm-',baae, depth, 'm-') 
-ax24.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax24.set_xlim([0, baaemax])
-ax24.set_ylim([y1max, 0])
-ax24.annotate('Baae', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='m')            
-'''
 #fig 3 Water 3/1 
 ax3 = plt.subplot(gs[2])
-#fig 3 Water -  3/1 PO4
+#fig 3 Water -  3/1 CH4
 plt.setp(ax3.get_xticklabels(), visible=False)
 ax3.set_ylim([y1max, 0])
-ax3.set_xlim([0, po4max])
+ax3.set_xlim([0, ch4max])
 ax31 = ax3.twiny()
 for spinename, spine in ax31.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 #ax31.spines['top'].set_position(('outward', axis1))
 ax31.spines['top'].set_color('g')
-ax31.plot(po4, depth, 'g-',po4, depth, 'g-') 
-ax31.set_xlim([0, po4max])
-ax31.set_xticks(np.arange(0,po4max+po4max/4,po4max/4))
+ax31.plot(ch4, depth, 'g-',ch4, depth, 'g-') 
+ax31.set_xlim([0, ch4max])
+ax31.set_xticks(np.arange(0,ch4max+ch4max/4,ch4max/4))
 #ax31.set_xticks(np.arange(0,po4max+100,100))
-ax31.annotate('PO4', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
+ax31.annotate('CH4', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='g')
 
-#fig 3 Water -  3/1 - pon
+#fig 3 Water -  3/1 - Om_ar
 ax32 = ax3.twiny()
 for spinename, spine in ax32.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax32.spines['top'].set_position(('outward', axis2))
 ax32.spines['top'].set_color('r')
-ax32.plot(pon,depth,'r-',pon,depth,'r-') 
+ax32.plot(om_ar,depth,'r-',om_ar,depth,'r-') 
 ax32.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax32.set_xlim([0,ponmax])
-ax32.set_xticks(np.arange(0,ponmax+ponmax/4,ponmax/4))
+ax32.set_xlim([0,om_armax])
+ax32.set_xticks(np.arange(0,om_armax+om_armax/4,om_armax/4))
 ax32.set_ylim([y1max, 0])
-ax32.annotate('PON', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
+ax32.annotate('Om_Ar', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='r')  
-''' 
-#fig 3 Water -  3/1 don 
-ax33 = ax3.twiny()
-for spinename, spine in ax33.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax33.spines['top'].set_position(('outward', axis3))
-ax33.spines['top'].set_color('b')
-ax33.plot(don, depth, 'b-',don, depth, 'b-') 
-ax33.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax33.set_xlim([0, donmax])
-ax33.set_xticks(np.arange(0,donmax+donmax/4,donmax/4))
-ax33.set_ylim([y1max, 0])
-ax33.annotate('DON', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='b')   
-#fig 3 Water - 3/1 NO3
 
-ax34 = ax3.twiny()
-for spinename, spine in ax34.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax34.spines['top'].set_position(('outward', axis4))
-ax34.spines['top'].set_color('m')
-ax34.plot(no3, depth, 'mo-',no3, depth, 'mo-') 
-ax34.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax34.set_xlim([0, no3max])
-ax34.set_ylim([y1max, 0])
-ax34.annotate('NO3', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='m')   
-'''
 #fig 3 Water - 4/1 
 ax4 = plt.subplot(gs[3])
-#fig 3 Water -  4/1 FeII
+#fig 3 Water -  4/1 Si
 plt.setp(ax4.get_xticklabels(), visible=False)
 ax4.set_ylim([y1max, 0])
 ax41 = ax4.twiny()
@@ -1581,189 +1480,88 @@ for spinename, spine in ax41.spines.iteritems():
         spine.set_visible(False)
 ax41.spines['top'].set_position(('outward', axis1))
 ax41.spines['top'].set_color('g')
-ax41.set_xlim([0, fe2max])
-ax41.plot(fe2,depth,'g-',fe2,depth,'g-')
-ax41.annotate('FeII', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
+ax41.set_xlim([0, simax])
+ax41.plot(si,depth,'g-',si,depth,'g-')
+ax41.annotate('Si', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='g')
 
-#fig 3 Water -  4/1 - FeIII
+#fig 3 Water -  4/1 - Si_part
 ax42 = ax4.twiny()
 for spinename, spine in ax42.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax42.spines['top'].set_position(('outward', axis2))
 ax42.spines['top'].set_color('r')
-ax42.plot(fe3,depth,'r-',fe3,depth,'r-') 
+ax42.plot(si_part,depth,'r-',si_part,depth,'r-') 
 ax42.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax42.set_xlim([0, fe3max])
+ax42.set_xlim([0, si_partmax])
 #ax42.set_xticks(np.arange(0,fe3max+fe3max/2,fe3max/2))
 ax42.set_ylim([y1max, 0])
 ax42.annotate('FeIII', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='r') 
-''' 
-#fig 3 Water -  4/1 FeS
-ax43 = ax4.twiny()
-for spinename, spine in ax43.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax43.spines['top'].set_position(('outward', axis3))
-ax43.spines['top'].set_color('b')
-ax43.plot(fes, depth, 'b-',fes, depth, 'b-') 
-ax43.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax43.set_xlim([0, fesmax])
-ax43.set_ylim([y1max, 0])
-ax43.annotate('FeS', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='b')  
-#fig 3 Water - 4/1 FeS2
-ax44 = ax4.twiny()
-for spinename, spine in ax44.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax44.spines['top'].set_position(('outward', axis4))
-ax44.spines['top'].set_color('m')
-ax44.plot(fes2, depth, 'm-',fes2, depth, 'm-') 
-ax44.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax44.set_xlim([0, fes2max])
-ax44.set_ylim([y1max, 0])
-ax44.annotate('FeS2', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='m') 
 
-
-#fig 3 Water - 3/1 MnCO3
-ax45 = ax4.twiny()
-for spinename, spine in ax45.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax45.spines['top'].set_position(('outward', axis5))
-ax45.spines['top'].set_color('y')
-ax45.plot(mnco3, depth, 'yo-',mnco3, depth, 'yo-') 
-#ax45.set_xlabel('MnCo3', color='y',) 
-ax45.xaxis.set_label_position('top') # this moves the label to the top
-ax45.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax45.set_xlim([0, mnco3max])
-ax45.set_xticks(np.arange(0,mnco3max+mnco3max/2,mnco3max/2))
-ax45.set_ylim([y1max, 0])
-ax45.annotate('MnCO3', xy=(labelaxis_x,labelaxis5_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='y') 
-'''
 ##fig 3  BBL 1/2
- #fig 3  BBL 1/2 - Phyto
+ #fig 3  BBL 1/2 - pH
 ax5 = plt.subplot(gs[4])
-ax5.plot(phy,depth,'bo-',phy,depth,'bo-')
+ax5.plot(pH,depth,'bo-',pH,depth,'bo-')
 ax5.set_ylabel('Depth (m)')
 plt.setp(ax5.get_xticklabels(), visible=False)
-ax5.set_xlim([0, phymax])
+ax5.set_xlim([0, pHmax])
 ax5.set_ylim([y2max, y2min])
-#fig 3 BBL 1/2 - Het
+#fig 3 BBL 1/2 - pco2
 ax52 = ax5.twiny()
-ax52.plot(het, depth, 'ro-',het, depth, 'ro-') 
-ax52.set_xlim([0, hetmax])
+ax52.plot(pco2, depth, 'ro-',pco2, depth, 'ro-') 
+ax52.set_xlim([0, pco2max])
 ax52.set_ylim([y2max, y2min])
 plt.setp(ax52.get_xticklabels(), visible=False)
-'''#fig 3 BBL 1/2 Kz
-ax53 = ax5.twiny()
-ax53.plot(kz, depth, 'go-',kz, depth, 'go-') 
-ax3.set_xlim([kzmin, kzmax])
-ax53.set_ylim([y2max, y2min])
-plt.setp(ax53.get_xticklabels(), visible=False)
-'''
+
 
 #fig 3  BBL 2/2 
 ax6 = plt.subplot(gs[5])
-#fig 3  BBL - Baan
-ax6.plot(baan,depth,'go-',baan,depth,'go-')
-ax6.set_xlim([0, baanmax])
+#fig 3  BBL - alk
+ax6.plot(alk,depth,'go-',alk,depth,'go-')
+ax6.set_xlim([0, alkmax])
 ax6.set_ylim([y2max, y2min])
 plt.setp(ax6.get_xticklabels(), visible=False)
-#fig 3 BBL -  2/2 Bhan
+#fig 3 BBL -  2/2 dic
 ax62 = ax6.twiny()
-ax62.plot(bhan, depth, 'ro-',bhan, depth, 'ro-') 
-ax62.set_xlim([0, bhanmax])
+ax62.plot(dic, depth, 'ro-',dic, depth, 'ro-') 
+ax62.set_xlim([0, dicmax])
 ax62.set_ylim([y2max, y2min])
 plt.setp(ax62.get_xticklabels(), visible=False)
-'''
-#fig 3 BBL -  2/2 Bhae
-ax63 = ax6.twiny()
-ax63.plot(bhae, depth, 'bo-',bhae, depth, 'bo-') 
-ax63.set_xlim([0, bhaemax])
-ax63.set_ylim([y2max, y2min])
-plt.setp(ax63.get_xticklabels(), visible=False)
-
-#fig 3 BBL -  2/2 Bhan
-ax64 = ax6.twiny()
-ax64.plot(bhan, depth, 'mo-',bhan, depth, 'mo-') 
-ax64.set_xlim([0, bhanmax])
-ax64.set_ylim([y2max, y2min])
-plt.setp(ax64.get_xticklabels(), visible=False)
-'''
 
 ##fig 3 BBL 3/2
 ax7 = plt.subplot(gs[6])
-#fig 3 BBL 3/2 - PO4
-ax7.plot(po4,depth,'go-',po4,depth,'go-')
+#fig 3 BBL 3/2 - ch4
+ax7.plot(ch4,depth,'go-',ch4,depth,'go-')
 plt.setp(ax7.get_xticklabels(), visible=False)
-ax7.set_xlim([0,po4max])
+ax7.set_xlim([0,ch4max])
 ax7.set_ylim([y2max, y2min])
-#fig 3  3/2 - PON
+#fig 3  3/2 - om_ar
 ax72 = ax7.twiny()
-ax72.plot(pon, depth, 'ro-',pon, depth, 'ro-') 
-ax72.set_xlim([0, ponmax])
+ax72.plot(om_ar, depth, 'ro-',om_ar, depth, 'ro-') 
+ax72.set_xlim([0, om_armax])
 ax72.set_ylim([y2max, y2min])
 plt.setp(ax72.get_xticklabels(), visible=False)
-'''
-#fig 3 BBL 3\2 - don
-ax73 = ax7.twiny()
-ax73.plot(don, depth, 'b-',don, depth, 'b-') 
-ax73.set_xlim([0, donmax])
-ax73.set_ylim([y2max, y2min])
-plt.setp(ax73.get_xticklabels(), visible=False)
-#fig 3 BBL - 3/2 NO3
-ax74 = ax7.twiny()
-ax74.plot(no3, depth, 'mo-',no3, depth, 'mo-') 
-ax74.set_xlim([0, no3max])
-ax74.set_ylim([y2max, y2min])
-plt.setp(ax74.get_xticklabels(), visible=False)
-'''
+
 
 ##fig 3 BBL - 4/2
 ax8 = plt.subplot(gs[7])
-#fig 3 BBL - 4/2 - Fe II
-ax8.plot(fe2,depth,'go-',fe2,depth,'go-')
+#fig 3 BBL - 4/2 - Si
+ax8.plot(si,depth,'go-',si,depth,'go-')
 plt.setp(ax8.get_xticklabels(), visible=False)
-ax8.set_xlim([0,fe2max])
+ax8.set_xlim([0,simax])
 ax8.set_ylim([y2max, y2min])
 
-#fig 3 BBL - 4/2 - Fe III
+#fig 3 BBL - 4/2 - Si_part
 ax82 = ax8.twiny()
-ax82.plot(fe3, depth, 'ro-',fe3, depth, 'ro-') 
-ax82.set_xlim([0, fe3max])
+ax82.plot(si_part, depth, 'ro-',si_part, depth, 'ro-') 
+ax82.set_xlim([0, si_partmax])
 ax82.set_ylim([y2max, y2min])
 plt.setp(ax82.get_xticklabels(), visible=False)
-'''
-#fig 3 BBL 4\2 - FeS
-ax83 = ax8.twiny()
-ax83.plot(fe3, depth, 'bo-',fe3, depth, 'bo-') 
-ax83.set_xlim([0, fe3max])
-ax83.set_ylim([y2max, y2min])
-plt.setp(ax83.get_xticklabels(), visible=False)
-#fig 3 BBL - 4/2 fes2
-ax84 = ax8.twiny()
-ax84.plot(fes2, depth, 'mo-',fes2, depth, 'mo-') 
-ax84.set_xlim([0, fes2max])
-ax84.set_ylim([y2max, y2min])
-plt.setp(ax84.get_xticklabels(), visible=False)
-#fig 3 BBL - 4/2 MnCO3
-ax85 = ax8.twiny()
-ax85.plot(mnco3, depth, 'yo-',mnco3, depth, 'yo-') 
-ax85.set_xlim([-mnco3max, mnco3max])
-ax85.set_ylim([y2max, y2min])
-plt.setp(ax85.get_xticklabels(), visible=False)
-'''
+
 gs2 = gridspec.GridSpec(1, 4)
 gs2.update(left=0.08, right=0.92, top = 0.25, bottom = 0.05, wspace=0.65,hspace=0.9)
 
@@ -1772,119 +1570,76 @@ ax9 = plt.subplot(gs2[0,0])
 ax9.set_ylabel('Depth (m)')
 plt.setp(ax9.get_xticklabels(), visible=False)
 ax9.set_yticks(np.arange(yticksmin,yticksmax,0.01))
-#fig 3 sediment  1/3 Phy
+#fig 3 sediment  1/3 pH
 ax91 = ax9.twiny()
 for spinename, spine in ax91.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax91.spines['top'].set_position(('outward', axis1))
 ax91.spines['top'].set_color('g')
-ax91.plot(phy, depth, 'go-',phy, depth, 'go-') 
+ax91.plot(pH, depth, 'go-',pH, depth, 'go-') 
 ax91.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax91.set_xlim([0, phymax])
+ax91.set_xlim([0, pHmax])
 ax91.set_ylim([y3max, y3min])
-ax91.annotate('Phy', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
+ax91.annotate('pH', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='g') 
-#fig 3 Sediment - 1/3 het
+#fig 3 Sediment - 1/3 pco2
 ax92 = ax9.twiny()
 for spinename, spine in ax92.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax92.spines['top'].set_position(('outward', axis2))
 ax92.spines['top'].set_color('r')
-ax92.plot(het, depth, 'ro-',het, depth, 'ro-') 
+ax92.plot(pco2, depth, 'ro-',pco2, depth, 'ro-') 
 ax92.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax92.set_xlim([0, sed_hetmax])
+ax92.set_xlim([0, sed_pco2max])
 ax92.set_ylim([y3max, y3min])
-ax92.annotate('Het', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
+ax92.annotate('pco2', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='r') 
-'''#fig 3 Sediment 1/3 Phy
-ax93 = ax9.twiny()
-for spinename, spine in ax93.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax93.spines['top'].set_position(('outward', axis3))
-ax93.spines['top'].set_color('b')
-ax93.plot(phy,depth,'bo-',phy,depth,'bo-')
-ax93.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax93.set_xlim([5, 14])
-ax93.set_ylim([y3max, y3min])
-ax93.annotate('Phy', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='b') 
-            '''
+
             
-#fig 3 Sediment - 2/3 Baan
+#fig 3 Sediment - 2/3 alk
 ax10 = plt.subplot(gs2[0, 1])
 ax10.set_ylim([y3max, y3min])
 ax10.set_yticks(np.arange(yticksmin,yticksmax,0.01))
 plt.setp(ax10.get_xticklabels(), visible=False)
-#ax2.set_xticks(np.arange(20000,baanmax,2000))
+#ax2.set_xticks(np.arange(20000,alkmax,2000))
 ax101 = ax10.twiny()
 for spinename, spine in ax101.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax101.spines['top'].set_position(('outward', axis1))
 ax101.spines['top'].set_color('g')
-ax101.plot(baan,depth,'go-',baan,depth,'go-')
-ax101.set_xlim([0, sed_baanmax])
-ax101.annotate('Baan', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
+ax101.plot(alk,depth,'go-',alk,depth,'go-')
+ax101.set_xlim([0, sed_alkmax])
+ax101.annotate('alk', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='g') 
-#fig 3 sediment -  2/3 bhan
+#fig 3 sediment -  2/3 dic
 ax102 = ax10.twiny()
 for spinename, spine in ax102.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax102.spines['top'].set_position(('outward', axis2))
 ax102.spines['top'].set_color('r')
-ax102.plot(bhan,depth,'ro-',bhan,depth,'ro-') 
+ax102.plot(dic,depth,'ro-',dic,depth,'ro-') 
 ax102.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax102.set_xlim([0, sed_bhanmax])
+ax102.set_xlim([0, sed_dicmax])
 ax102.set_ylim([y3max, y3min])
-ax102.annotate('Bhan', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
+ax102.annotate('dic', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction', fontsize = 14,
             color='r') 
-'''
-#fig 3 Sediment -  2/3 bhae
-ax103 = ax10.twiny()
-for spinename, spine in ax103.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax103.spines['top'].set_position(('outward', axis3))
-ax103.spines['top'].set_color('b')
-ax103.plot(bhae, depth, 'bo-',bhae, depth, 'bo-') 
-ax103.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax103.set_xlim([0, sed_bhaemax])
-ax103.set_ylim([y3max, y3min])
-ax103.annotate('Bhae', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='b') 
-#fig 3 Sediment - 2/3 baae
-ax104 = ax10.twiny()
-for spinename, spine in ax104.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax104.spines['top'].set_position(('outward', axis4))
-ax104.spines['top'].set_color('m')
-ax104.plot(baae, depth, 'mo-',baae, depth, 'mo-') 
-ax104.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax104.set_xlim([0, sed_baaemax])
-ax104.set_ylim([y3max, y3min])
-ax104.annotate('Baae', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='m') 
-'''
-#fig 3 Sediment - 3/3 PO4
+
+#fig 3 Sediment - 3/3 ch4
 ax11 = plt.subplot(gs2[0,2])
-#ax11.plot(po4,depth,'go-',po4,depth,'go-')
+#ax11.plot(ch4,depth,'go-',ch4,depth,'go-')
 #ax3.set_ylabel('Depth (m)')
 plt.setp(ax11.get_xticklabels(), visible=False)
 ax11.set_ylim([y3max, y3min])
 ax11.set_yticks(np.arange(yticksmin,yticksmax,0.01))
-ax11.set_xlim([0, po4max])
+ax11.set_xlim([0, ch4max])
 
 ax111 = ax11.twiny()
 for spinename, spine in ax111.spines.iteritems():
@@ -1892,114 +1647,69 @@ for spinename, spine in ax111.spines.iteritems():
         spine.set_visible(False)
 ax111.spines['top'].set_position(('outward', axis1))
 ax111.spines['top'].set_color('g')
-ax111.plot(po4,depth,'go-',po4,depth,'go-')
-ax111.set_xlim([0, sed_po4max])
+ax111.plot(ch4,depth,'go-',ch4,depth,'go-')
+ax111.set_xlim([0, sed_ch4max])
 #ax111.set_xticks(np.arange(0,sed_o2max+100,100))
-ax111.annotate('PO4', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
+ax111.annotate('ch4', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='g') 
-#fig 3 Sediment -  3/3 - PON
+#fig 3 Sediment -  3/3 - om_ar
 ax112 = ax11.twiny()
 for spinename, spine in ax112.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax112.spines['top'].set_position(('outward', axis2))
 ax112.spines['top'].set_color('r')
-ax112.plot(pon,depth,'ro-',pon,depth,'ro-') 
+ax112.plot(om_ar,depth,'ro-',om_ar,depth,'ro-') 
 ax112.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax112.set_xlim([0, sed_ponmax])
-ax112.set_xticks(np.arange(0,sed_ponmax+sed_ponmax/4,sed_ponmax/4))
+ax112.set_xlim([0, sed_om_armax])
+ax112.set_xticks(np.arange(0,sed_om_armax+sed_om_armax/4,sed_om_armax/4))
 ax112.set_ylim([y3max, y3min])
-ax112.annotate('PON', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
+ax112.annotate('om_ar', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='r') 
-'''
-#fig 3 Sediment -  3/3 don 
-ax113 = ax11.twiny()
-for spinename, spine in ax113.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax113.spines['top'].set_position(('outward', axis3))
-ax113.spines['top'].set_color('b')
-ax113.plot(don, depth, 'bo-',don, depth, 'bo-') 
-ax113.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax113.set_xlim([0, sed_donmax])
-ax113.set_ylim([y3max, y3min])
-ax113.annotate('DON', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='b') 
-            '''
+
+            
 #fig 3 Sediment - 4/3 
 ax12 = plt.subplot(gs2[0,3])
 plt.setp(ax12.get_xticklabels(), visible=False)
 ax12.set_ylim([y3max, y3min])
 ax12.set_yticks(np.arange(yticksmin,yticksmax,0.01))
 ax121 = ax12.twiny()
-ax121.plot(fe2,depth,'go-',fe2,depth,'go-')
+ax121.plot(si,depth,'go-',si,depth,'go-')
 for spinename, spine in ax121.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax121.spines['top'].set_position(('outward', axis1))
 ax121.spines['top'].set_color('g')
-ax121.set_xlim([0, sed_fe2max])
-ax121.annotate('FeII', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
+ax121.set_xlim([0, sed_simax])
+ax121.annotate('Si', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='g') 
-#fig 3 Sediment - 4/3 - fe III
+#fig 3 Sediment - 4/3 - si_part
 ax122 = ax12.twiny()
 for spinename, spine in ax122.spines.iteritems():
     if spinename != 'top':
         spine.set_visible(False)
 ax122.spines['top'].set_position(('outward', axis2))
 ax122.spines['top'].set_color('r')
-ax122.plot(fe3,depth,'ro-',fe3,depth,'ro-') 
+ax122.plot(si_part,depth,'ro-',si_part,depth,'ro-') 
 ax122.xaxis.set_label_position('top') # this moves the label to the top
-ax122.set_xlim([0, sed_fe3max])
+ax122.set_xlim([0, sed_si_partmax])
 #ax32.set_xticks(np.arange(0,1500,500))
 ax122.set_ylim([y3max, y3min])
-ax122.annotate('FeIII', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
+ax122.annotate('Si_part', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 14,
             color='r') 
-'''
-#fig 3 Sediment - 4/3 FeS
-ax123 = ax12.twiny()
-for spinename, spine in ax123.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax123.spines['top'].set_position(('outward', axis3))
-ax123.spines['top'].set_color('b')
-ax123.plot(fes, depth, 'bo-',fes, depth, 'bo-') 
-ax123.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax123.set_xlim([0, sed_fesmax])
-ax123.set_ylim([y3max, y3min])
-ax123.annotate('FeS', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='b') 
-#fig 3 Sediment - 4/3 fes2
-ax124 = ax12.twiny()
-for spinename, spine in ax124.spines.iteritems():
-    if spinename != 'top':
-        spine.set_visible(False)
-ax124.spines['top'].set_position(('outward', axis4))
-ax124.spines['top'].set_color('m')
-ax124.plot(fes2, depth, 'mo-',fes2, depth, 'mo-') 
-ax124.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax124.set_xlim([0, sed_fes2max])
-ax124.set_ylim([y3max, y3min])
-ax124.annotate('FeS2', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
-            xycoords='axes fraction',  fontsize = 14,
-            color='m') 
-'''
 
 
-'''fig1.savefig('fig1.png')   # save the figure to file
-fig2.savefig('fig2.png')
-fig3.savefig('fig3.png')   
-'''
+#fig1.savefig('fig1.png')   # save the figure to file
+#fig2.savefig('fig2.png')
+#fig3.savefig('fig3.png')   
+
 
 plt.show()
 
 plt.close(fig1)
 plt.close(fig2)
-plt.close(fig3)
-
+#plt.close(fig3)
