@@ -48,6 +48,13 @@ data = zip(*values)                       #transpose the matrix of data
 #print data
 #Variables to plot:
 depth = data[2][2:]
+
+depth_sed = list(depth)
+#depth_sed = [map(float, x) for x in depth]
+#depth_sed = [[int(column) for column in row] for row in depth]
+#for i in depth_sed:
+#    depth_sed[i] -= 110 
+print type(depth_sed)
 temp = data[3][2:]
 sal = data[4][2:]
 kz = data[5][2:]
@@ -107,14 +114,14 @@ yticksmax = 110.09
 y2min_fill_bbl = y2max_fill_water = 109.5
 y3max_fill_bbl = y3min_fill_sed = 110
 xticks =(np.arange(0,50000)) 
-wat_color = '#cff5fc' #f6f0db' #'white'#'c'
+wat_color = '#c9ecfd' #f6f0db' #'white'#'c'
 bbl_color = '#d2a87e'
 sed_color = '#916012' #'k'
 
 alpha_fill = 0.2
 alpha_wat = 0.2
 alpha_bbl = 0.2
-alpha_sed = 0.3 
+alpha_sed = 0.4 
 #limits for x   WatBBL axes:
 kzmin = 0
 kzmax = 12 
@@ -240,7 +247,7 @@ fig1.add_axes(rect, label='axes1')
 gs = gridspec.GridSpec(2, 4)  #determine grid of subplots (BBL and Water)
 gs.update(left=0.08, right=0.92,top = 0.86,bottom = 0.4, wspace=0.35,hspace=0.02)
 
-xlabel_fontsize = 16
+xlabel_fontsize = 17
 xlabel_size = 13
 ylabel_size = 13
 mpl.rcParams['xtick.labelsize'] = xlabel_size
