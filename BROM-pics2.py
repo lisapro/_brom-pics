@@ -32,8 +32,8 @@ values=[]                                  # create empty matrix for storing dat
 #f = open('output_160_day.dat', 'rb')
 #f = open('output_170_day.dat', 'rb')
 #f = open('output_180_day.dat', 'rb')
-#f = open('output_190_day.dat', 'rb')
-f = open('output_330_day.dat', 'rb')
+f = open('output_190_day.dat', 'rb')
+#f = open('output_330_day.dat', 'rb')
 
 
 num_lines = sum(1 for l  in f)
@@ -102,7 +102,7 @@ om_ca = data[58][2:]
 om_ar = data[59][2:]
 co3 = data[60][2:]
 ca = data[61][2:]
-
+print data
 
 #limits for Water,BBL, and Sediment
 y1min = 0
