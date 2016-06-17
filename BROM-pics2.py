@@ -234,10 +234,10 @@ sed_co3max = 10
 sed_camax = 10
 #positions for axes
 axis1 = 0
-axis2 = 26
-axis3 = 52
-axis4 = 78
-axis5 = 104
+axis2 = 27
+axis3 = 53
+axis4 = 79
+axis5 = 105
 
 labelaxis_x =  1.10
 labelaxis1_y = 1.02
@@ -292,8 +292,8 @@ ax11.set_ylim([y1max, 0])
 ax11.annotate(r'$\rm Kz $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='g')
+ax11.tick_params(direction='out', pad=0) # remove distance berween labels and axis
 
-###################################### ax11.tick_params(direction='out', pad=0)
 #Fig1 Water 1/1 Salinity  
 ax12 = ax1.twiny()
 for spinename, spine in ax12.spines.iteritems():
@@ -309,6 +309,7 @@ ax12.set_ylim([y1max, 0])
 ax12.annotate(r'$\rm S $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='r')
+ax12.tick_params(direction='out', pad=0) # remove distance berween labels and axis
 #Fig1 Water Temperature 
 ax13 = ax1.twiny()
 for spinename, spine in ax13.spines.iteritems():
@@ -323,7 +324,7 @@ ax13.set_ylim([y1max, 0])
 ax13.annotate(r'$\rm T $', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='b')   
-                       
+ax13.tick_params(direction='out', pad=0) # remove distance berween labels and axis                       
 #Fig1 Water 2/1   
 ax2 = plt.subplot(gs[5])
 ax2.set_ylim([y2min, 0])
@@ -343,7 +344,7 @@ ax21.spines['top'].set_color('g')
 ax21.annotate(r'$\rm SO _4 $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='g')
-
+ax21.tick_params(direction='out', pad=0) # remove distance berween labels and axis
 #Fig1 Water -  2/1 S0
 ax22 = ax2.twiny()
 for spinename, spine in ax22.spines.iteritems():
@@ -356,10 +357,10 @@ ax22.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax22.set_xlim([0, s0max ])
 ax22.set_xticks(np.arange(0,s0max+s0max/2.,s0max/2.))
 ax22.set_ylim([y1max, 0])
-ax21.annotate(r'$\rm S ^0$', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
+ax22.annotate(r'$\rm S ^0$', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='r')
-
+ax22.tick_params(direction='out', pad=0) # remove distance berween labels and axis
 #Fig1 Water -  2/1 H2S
 ax23 = ax2.twiny()
 for spinename, spine in ax23.spines.iteritems():
@@ -376,7 +377,7 @@ ax23.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax23.set_xlim([0, h2smax])
 ax23.set_xticks(np.arange(0,h2smax+h2smax/2.,h2smax/2.))
 ax23.set_ylim([y1max, 0])
-
+ax23.tick_params(direction='out', pad=0) # remove distance berween labels and axis
 #Fig1 Water - 2/1 s2o3
 ax24 = ax2.twiny()
 for spinename, spine in ax24.spines.iteritems():
@@ -392,7 +393,7 @@ ax24.set_ylim([y1max, 0])
 ax24.annotate(r'$\rm S _2 O_ 3$', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='m')            
-
+ax24.tick_params(direction='out', pad=0) # remove distance berween labels and axis
 #Fig1 Water 3/1 
 ax3 = plt.subplot(gs[1])
 plt.setp(ax3.get_xticklabels(), visible=False)
