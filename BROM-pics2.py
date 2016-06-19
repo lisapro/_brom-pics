@@ -25,14 +25,14 @@ style.use('ggplot')
 
 values=[]                                  # create empty matrix for storing data
 
-#f = open('output_60_day.dat', 'rb')       #open model output file, 'read binary' 
-#f = open('output_100_day.dat', 'rb')
+f = open('output_40_day.dat', 'rb')       #open model output file, 'read binary' 
+#f = open('output_330_day.dat', 'rb')
 #f = open('output_110_day.dat', 'rb')
 #f = open('output_150_day.dat', 'rb')
 #f = open('output_160_day.dat', 'rb')
 #f = open('output_170_day.dat', 'rb')
 #f = open('output_180_day.dat', 'rb')
-f = open('output_190_day.dat', 'rb')
+#f = open('output_190_day.dat', 'rb')
 #f = open('output_330_day.dat', 'rb')
 
 
@@ -44,7 +44,7 @@ f.seek(0)                                  # return to the beginning of the file
 a = f.readline()
 date = a.split()   
 
-numday = date[2]
+numday = date[1]
 
 for _ in range(2):                        # skip two unneeded lines 
     line = f.readline() 
@@ -145,7 +145,7 @@ so4min = 10000
 so4max = 30000
 h2smax = 3
 s0max = 3
-s2o3max = 3 
+s2o3max = 12 
 o2max = 500
 nh4max = 10
 no2max = 2
@@ -175,7 +175,7 @@ dicmax = 6000
 alkmin = 2200
 alkmax = 2800
 simax = 500
-si_partmax = 100
+si_partmax = 400
 ch4max = 0.5
 phmin = 5
 phmax = 9
@@ -233,6 +233,7 @@ sed_om_camax = 10
 sed_om_armax = 5
 sed_co3max = 10
 sed_camax = 10
+
 #positions for axes
 axis1 = 0
 axis2 = 27
@@ -313,7 +314,7 @@ ax12.set_ylim([y1max, 0])
 ax12.annotate(r'$\rm S $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='r')
-ax12.tick_params(direction='out', pad=0) # remove distance berween labels and axis
+ax12.tick_params(direction='out', pad=0) # remove distance between labels and axis
 #Fig1 Water Temperature 
 ax13 = ax1.twiny()
 for spinename, spine in ax13.spines.iteritems():
@@ -333,7 +334,7 @@ ax13.tick_params(direction='out', pad=0) # remove distance berween labels and ax
 #Fig1 Water 2/1   
 ax2 = plt.subplot(gs[5])
 plt.text(1.1, 0.5,'Water ', fontweight='bold', #Write number of day to Figure
-         bbox={'facecolor':'#c9ecfd', 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90, 
+         bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90, 
     transform=ax2.transAxes)
 ax2.set_ylim([y2min, 0])
 ax2.set_xlim([0, s0max])
@@ -935,10 +936,10 @@ ax10.yaxis.grid(True,'major')
 ax10.set_xlim([sed_so4min, sed_so4max])
 ax10.set_xticks(np.arange(sed_so4min,sed_so4max,(sed_so4max - sed_so4min)))
 
-plt.text(1.1, 0.7,'BBL ', fontweight='bold', #Write number of day to Figure
+plt.text(1.1, 0.7,'BBL ', fontweight='bold', # draw legend to BBL
          bbox={'facecolor': bbl_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
     transform=ax10.transAxes)
-plt.text(1.1, 0.3,'Sediment ', fontweight='bold', #Write number of day to Figure
+plt.text(1.1, 0.3,'Sediment ', fontweight='bold', #draw legend to Sediment
          bbox={'facecolor': sed_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
     transform=ax10.transAxes)
 
@@ -1549,6 +1550,9 @@ axn32.annotate(r'$\rm \Omega Ar $', xy=(labelaxis_x,labelaxis2_y), ha='left', va
 
 #fig 2 Water - 4/1 
 axn4 = plt.subplot(gs[5])
+plt.text(1.1, 0.5,'Water ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90, 
+    transform=axn4.transAxes)
 #fig 2 Water -  4/1 Si
 plt.setp(axn4.get_xticklabels(), visible=False)
 axn4.set_ylim([y1max, 0])
@@ -1684,6 +1688,13 @@ plt.setp(axn8.get_xticklabels(), visible=False)
 axn8.set_xlim([0,simax])
 axn8.set_xticks(np.arange(0,simax+simax/2,simax/2))
 axn8.set_ylim([y2max, y2min])
+
+plt.text(1.1, 0.7,'Water ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
+    transform=axn8.transAxes)
+plt.text(1.1, 0.3,'BBL ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': bbl_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
+    transform=axn8.transAxes)
 #fig 3 BBL - 4/2 - Si_part
 axn82 = axn8.twiny()
 axn82.plot(si_part, depth, 'mo-',si_part, depth, 'mo-') 
@@ -1946,6 +1957,12 @@ axn112.annotate(r'$\rm \Omega Ar $', xy=(labelaxis_x,labelaxis2_y), ha='left', v
             
 #fig 3 Sediment - 4/3 Si
 axn12n = plt.subplot(gs1[0,5])
+plt.text(1.1, 0.7,'BBL ', fontweight='bold', # draw legend to BBL
+         bbox={'facecolor': bbl_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
+    transform=axn12n.transAxes)
+plt.text(1.1, 0.3,'Sediment ', fontweight='bold', #draw legend to Sediment
+         bbox={'facecolor': sed_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
+    transform=axn12n.transAxes)
 plt.setp(axn12n.get_xticklabels(), visible=False)
 axn12n.set_ylim([y3max, y3min])
 # draw minor gridlines
@@ -1956,7 +1973,10 @@ axn12n.yaxis.grid(True,'minor')
 axn12n.yaxis.grid(True,'major')
 axn12n.set_xticks(np.arange(0,sed_si_partmax+sed_si_partmax,sed_si_partmax))
  # This makes axis label to be written in full scalar mode
-axn12n.yaxis.set_major_formatter(y_formatter) # ( not exp as default)   
+axn12n.yaxis.set_major_formatter(y_formatter) # ( not exp as default) 
+
+
+  
 axn121 = axn12n.twiny()
 axn121.plot(si,depth_sed,'go-',si,depth_sed,'go-')
 for spinename, spine in axn121.spines.iteritems():
@@ -2021,12 +2041,12 @@ axn9.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alp
 axn9.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 
 # save the figure to file
-fig1.savefig('fig1O2H2S.png')   
-fig2.savefig('fig2PhyHet.png')
+fig1.savefig('fig1O2H2S - day'+numday+'.png')    
+fig2.savefig('fig2PhyHet- day'+numday+'.png')
 
 
 
-plt.show()
+#plt.show()
 
 plt.close(fig1)
 plt.close(fig2)
