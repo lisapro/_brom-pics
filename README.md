@@ -9,3 +9,5 @@ The easiest way is to use Enthought Canopy(https://store.enthought.com/downloads
 2. Clone this repository (https://github.com/lisapro/_brom-pics.git) into wotrking folder.  
 3. You should place the ascii output file in the same folder and name it output.dat
 4. Run it
+5. ![Figure example](http://imgur.com/a/2gaZS)
+
