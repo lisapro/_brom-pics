@@ -12,34 +12,14 @@ majorFormatter = y_formatter #FormatStrFormatter('%d')
 minorLocator = MultipleLocator(1.)
 #minorFormatter = FormatStrFormatter('%d')
 
-
 style.use('ggplot')
 
 values=[]                                  # create empty matrix for storing data
 
-
-
-
-
-
-#num_lines = sum(1 for l  in f)
-#num = num_lines - 1                        # calculate number of lines
-#f.seek(0)                                  # return to the beginning of the file
-#
-                       # skip two unneeded lines
-
-#
-#for _ in range(num):
-#    line = f.readline()                   # read line for heading
-#    foo = line.split()
-#    values.append(foo)
-#values = values[:][:end-2]
-#data = list(zip(*values))                       #transpose the matrix of data
-
 f = None
 try:
-    f = open('output_40_day.dat', 'rb') #open model output file, 'read binary'        
-    #f = open('output_330_day.dat', 'rb') 
+    #f = open('output_40_day.dat', 'rb') #open model output file, 'read binary'        
+    f = open('output_330_day.dat', 'rb') 
     line = f.readline()
     date = line.split()   
     numday = date[1]
@@ -116,7 +96,6 @@ om_ar = data[59][1:]
 co3 = data[60][1:]
 ca = data[61][1:]
 
-
 #limits for Water,BBL, and Sediment
 y1min = 0
 y1max = 109
@@ -136,10 +115,10 @@ xticks =(np.arange(0,100000))
 wat_color = '#c9ecfd'
 bbl_color = '#2873b8' #'#d2a87e'
 sed_color = '#916012'
-
 alpha_wat = 0.3
 alpha_bbl = 0.3
 alpha_sed = 0.5
+
 #limits for x   WatBBL axes:
 kzmin = 1.e-7
 kzmax = 1.e-0
