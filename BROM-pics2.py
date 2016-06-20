@@ -17,12 +17,11 @@ values=[]   # create empty matrix for storing data
 
 f = None
 try:
-    #f = open('output.dat', 'rb') #open model output file, 'read binary'        
-    f = open('output_330_day.dat', 'rb') 
+    f = open('output.dat', 'rb') #open model output file, 'read binary'        
+    #f = open('output_330_day.dat', 'rb') 
     line = f.readline()
     date = line.split()   
     numday = date[1]
-    print numday
     for _ in range(1):
         line = f.readline()
     while True:
@@ -48,7 +47,6 @@ y3min = -10 #109.91
 y3max = 10 #110.10
 ysedmin = -8 #for depth in cm
 ysedmax = 10
-
 data = zip(*values) #transpose the matrix of data
 
 depth = data[2][1:]
