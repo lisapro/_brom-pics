@@ -9,5 +9,7 @@ The easiest way is to use Enthought Canopy(https://store.enthought.com/downloads
 2. Clone this repository (https://github.com/lisapro/_brom-pics.git) into python working folder.  
 3. You should place the ASCII output file in the same folder and name it output.dat
 4. Run it
-## Example of figures 
+
+##  Example of figures 
+
 ![Figure example](http://i.imgur.com/hU84LUU.png)
