@@ -6,14 +6,6 @@ import matplotlib as mpl
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter,LogLocator
 import matplotlib.patches as mpatches
 
-
-
-
-
-#matplotlib.rc('text', usetex=True)
-#matplotlib.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-#mpl.rcParams['text.latex.preamble'] = [r'\boldmath']
-
 y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)   #format y scales to be scalar
 majorLocator = MultipleLocator(2.)
 majorFormatter = y_formatter #FormatStrFormatter('%d')
@@ -25,22 +17,17 @@ style.use('ggplot')
 
 values=[]                                  # create empty matrix for storing data
 
-#f = open('output_60_day.dat', 'rb')       #open model output file, 'read binary'
-#f = open('output_100_day.dat', 'rb')
-#f = open('output_110_day.dat', 'rb')
-#f = open('output_150_day.dat', 'rb')
-#f = open('output_160_day.dat', 'rb')
-#f = open('output_170_day.dat', 'rb')
-#f = open('output_180_day.dat', 'rb')
-#f = open('output_330_day.dat', 'rb')
+
+
+
 
 
 #num_lines = sum(1 for l  in f)
 #num = num_lines - 1                        # calculate number of lines
 #f.seek(0)                                  # return to the beginning of the file
 #
-#for _ in range(3):                        # skip two unneeded lines
-#    line = f.readline()
+                       # skip two unneeded lines
+
 #
 #for _ in range(num):
 #    line = f.readline()                   # read line for heading
@@ -51,8 +38,13 @@ values=[]                                  # create empty matrix for storing dat
 
 f = None
 try:
-    f = open('output_190_day.dat', 'rb')
-    for _ in range(3):
+    f = open('output_40_day.dat', 'rb') #open model output file, 'read binary'        
+    #f = open('output_330_day.dat', 'rb') 
+    line = f.readline()
+    date = line.split()   
+    numday = date[1]
+    print numday
+    for _ in range(1):
         line = f.readline()
     while True:
         line = f.readline()
@@ -70,17 +62,17 @@ finally:
 
 data = zip(*values) #transpose the matrix of data
 
-#Variables to plot:
 depth = data[2][1:]
+
 to_float = []
 for item in depth:
-    to_float.append(float(item)) #make a list of floats from tuple
-depth_sed = [] # list for storing final depth data for sediment
-v=0
+    to_float.append(float(item)) #make a list of floats from tuple 
+depth_sed = [] # list for storing final depth data for sediment 
+v=0  
 for i in to_float:
     v = (i- 110)*100 #(sed_wat interface)
     depth_sed.append(v)
-
+    
 temp = data[3][1:]
 sal = data[4][1:]
 kz = data[5][1:]
@@ -123,7 +115,7 @@ om_ca = data[58][1:]
 om_ar = data[59][1:]
 co3 = data[60][1:]
 ca = data[61][1:]
-#print data
+
 
 #limits for Water,BBL, and Sediment
 y1min = 0
@@ -134,11 +126,6 @@ y3min = -10 #109.91
 y3max = 10 #110.10
 ysedmin = -8 #for depth in cm
 ysedmax = 10
-
-#yticksmin = 110# 109.91
-#yticksmax = 110.09
-#ysedticksmin = -10# 109.91
-#ysedticksmax = 10
 
 #for filling the font
 y2min_fill_bbl = y2max_fill_water = 109.5
@@ -156,16 +143,15 @@ alpha_sed = 0.5
 #limits for x   WatBBL axes:
 kzmin = 1.e-7
 kzmax = 1.e-0
-#kzmax =  8
-salmin = 32
+salmin = 35
 salmax = 36
-tempmin = 5
-tempmax = 25
+tempmin = 7
+tempmax =9
 so4min = 10000
 so4max = 30000
 h2smax = 3
 s0max = 3
-s2o3max = 3
+s2o3max = 12 
 o2max = 500
 nh4max = 10
 no2max = 2
@@ -195,7 +181,7 @@ dicmax = 6000
 alkmin = 2200
 alkmax = 2800
 simax = 500
-si_partmax = 100
+si_partmax = 400
 ch4max = 0.5
 phmin = 5
 phmax = 9
@@ -205,11 +191,11 @@ om_armax = 10
 co3max = 10
 camax = 10
 #limits for x Sediment axes:
-sed_kzmin = 1.e-11
+sed_kzmin = 0#1.e-11
 sed_kzmax = 1.e-5
-sed_tempmin = 5
-sed_tempmax = 25
-sed_salmin = 32
+sed_tempmin = 7
+sed_tempmax = 9
+sed_salmin = 35
 sed_salmax = 36
 sed_so4min = 10000
 sed_so4max = 30000
@@ -253,6 +239,7 @@ sed_om_camax = 10
 sed_om_armax = 5
 sed_co3max = 10
 sed_camax = 10
+
 #positions for axes
 axis1 = 0
 axis2 = 27
@@ -295,6 +282,9 @@ ax1.set_ylim([y2min, 0])
 plt.setp(ax1.get_xticklabels(), visible=False)
 ax1.set_xlim([kzmin,kzmax])
 ax1.set_xticks(np.arange(kzmin,2*kzmax ,(kzmax)))
+plt.text(0, 1.5,'Day '+ numday , fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor':'#c9ecfd', 'alpha':0.5, 'pad':10}, fontsize=14,
+    transform=ax1.transAxes)
 #Fig1  water Kz
 ax11 = ax1.twiny()
 for spinename, spine in ax11.spines.iteritems():
@@ -302,7 +292,7 @@ for spinename, spine in ax11.spines.iteritems():
         spine.set_visible(False)
 ax11.spines['top'].set_position(('outward', axis1))
 ax11.spines['top'].set_color('g')
-plt.semilogx(kz, depth,'g-')
+plt.semilogx(kz,depth,'g-')
 plt.grid(True)
 ax11.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax11.set_xticks(np.arange(kzmin,kzmax +(kzmax- kzmin)/2. ,(kzmax- kzmin)/2.))
@@ -313,7 +303,7 @@ ax11.set_ylim([y1max, 0])
 ax11.annotate(r'$\rm Kz $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='g')
-ax11.tick_params(direction='out', pad=0) # remove distance berween labels and axis
+ax11.tick_params(direction='out', pad=0) # remove distance between labels and axis
 
 #Fig1 Water 1/1 Salinity
 ax12 = ax1.twiny()
@@ -325,13 +315,17 @@ ax12.spines['top'].set_color('r')
 ax12.plot(sal, depth, 'r-',sal, depth, 'r-')
 ax12.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax12.set_xlim([salmin, salmax])
-ax12.set_xticks(np.arange(salmin,salmax+((salmax -salmin)/4),((salmax -salmin)/4)))
+ax12.set_xticks(np.arange(salmin,salmax+((salmax -salmin)/2.),((salmax -salmin)/2.)))
 ax12.set_ylim([y1max, 0])
 ax12.annotate(r'$\rm S $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='r')
-ax12.tick_params(direction='out', pad=0) # remove distance berween labels and axis
+ax12.tick_params(direction='out', pad=0) # remove distance between labels and axis
 #Fig1 Water Temperature
+
+ax12.tick_params(direction='out', pad=0) # remove distance between labels and axis
+#Fig1 Water Temperature 
+
 ax13 = ax1.twiny()
 for spinename, spine in ax13.spines.iteritems():
     if spinename != 'top':
@@ -340,14 +334,19 @@ ax13.spines['top'].set_position(('outward',axis3))
 ax13.spines['top'].set_color('b')
 ax13.plot(temp,depth,'b-',temp,depth,'b-')
 ax13.xaxis.set_ticks_position('top') # this moves the ticks to the top
-ax13.set_xlim([tempmin,tempmax ])
+ax13.set_xlim([tempmin,tempmax])
+ax13.set_xticks(np.arange(tempmin,tempmax+((tempmax - tempmin)/2.),((tempmax - tempmin)/2.)))
 ax13.set_ylim([y1max, 0])
 ax13.annotate(r'$\rm T $', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='b')
-ax13.tick_params(direction='out', pad=0) # remove distance berween labels and axis
-#Fig1 Water 2/1
+ax13.tick_params(direction='out', pad=0) # remove distance between labels and axis
+                    
+#Fig1 Water 2/1   
 ax2 = plt.subplot(gs[5])
+plt.text(1.1, 0.5,'Water ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90, 
+    transform=ax2.transAxes)
 ax2.set_ylim([y2min, 0])
 ax2.set_xlim([0, s0max])
 ax2.set_xticks(np.arange(0,s0max+s0max,s0max))
@@ -434,7 +433,7 @@ ax31.set_xticks(np.arange(0,o2max+o2max/5.,o2max/5.))
 ax31.annotate(r'$\rm O _2 $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='g')
-
+ax31.tick_params(direction='out', pad=0) # remove distance between labels and axis
 #Fig1 Water -  3/1 - NH4
 ax32 = ax3.twiny()
 for spinename, spine in ax32.spines.iteritems():
@@ -449,9 +448,10 @@ ax32.set_xticks(np.arange(0,nh4max+nh4max/5.,nh4max/5.))
 ax32.set_ylim([y1max, 0])
 ax32.annotate(r'$\rm NH _4 $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
-            color='r')
+            color='r') 
+ax32.tick_params(direction='out', pad=0) # remove distance between labels and axis
+#Fig1 Water -  3/1 NO2 
 
-#Fig1 Water -  3/1 NO2
 ax33 = ax3.twiny()
 for spinename, spine in ax33.spines.iteritems():
     if spinename != 'top':
@@ -465,7 +465,8 @@ ax33.set_xticks(np.arange(0,no2max+no2max/5.,no2max/5.))
 ax33.set_ylim([y1max, 0])
 ax33.annotate(r'$\rm NO _2 $', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
-            color='b')
+            color='b') 
+ax33.tick_params(direction='out', pad=0) # remove distance between labels and axis
 
 #Fig1 Water - 3/1 NO3
 ax34 = ax3.twiny()
@@ -477,11 +478,12 @@ ax34.spines['top'].set_color('m')
 ax34.plot(no3, depth, 'm-',no3, depth, 'm-')
 ax34.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax34.set_xlim([0, no3max])
-ax32.set_xticks(np.arange(0,no3max+no3max/5.,no3max/5.))
+ax34.set_xticks(np.arange(0,no3max+no3max/5.,no3max/5.))
 ax34.set_ylim([y1max, 0])
 ax34.annotate(r'$\rm NO _3 $',fontweight='bold', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='m')
+ax34.tick_params(direction='out', pad=0) # remove distance between labels and axis
 
 #Fig1 Water - 4/1
 ax4 = plt.subplot(gs[3])
@@ -685,7 +687,7 @@ ax5.plot(temp,depth,'bo-',temp,depth,'bo-')
 ax5.set_ylabel('Depth (m)')
 plt.setp(ax5.get_xticklabels(), visible=False)
 ax5.set_xlim([tempmin,tempmax])
-ax5.set_xticks(np.arange(tempmin,tempmax+((tempmax - tempmin)/4.),((tempmax - tempmin)/4.)))
+ax5.set_xticks(np.arange(tempmin,tempmax+((tempmax - tempmin)/2.),((tempmax - tempmin)/2.)))
 ax5.set_ylim([y2max, y2min])
 #Fig1 BBL 1/2 - Salinity
 ax52 = ax5.twiny()
@@ -707,6 +709,14 @@ plt.setp(ax53.get_xticklabels(), visible=False)
 
 #Fig1  BBL 2/2
 ax6 = plt.subplot(gs[11])
+
+plt.text(1.1, 0.7,'Water ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
+    transform=ax6.transAxes)
+plt.text(1.1, 0.3,'BBL ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': bbl_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
+    transform=ax6.transAxes)
+
 #Fig1  BBL - SO4
 ax6.plot(so4,depth,'go-',so4,depth,'go-')
 ax6.set_xlim([so4min, so4max])
@@ -853,12 +863,6 @@ axn84.set_ylim([y2max, y2min])
 plt.setp(axn84.get_xticklabels(), visible=False)
 
 
-
-
-
-
-
-
 ###############
 #Fig1 Sediment#
 ###############
@@ -882,12 +886,13 @@ for spinename, spine in ax91.spines.iteritems():
         spine.set_visible(False)
 ax91.spines['top'].set_position(('outward', axis1))
 ax91.spines['top'].set_color('g')
-ax91.plot(kz, depth_sed, 'go-',kz, depth_sed, 'go-')
-ax91.set_xscale('log')
+ax91.plot(kz, depth_sed, 'go-',kz, depth_sed, 'go-') 
+#ax91.set_xscale('log')
 ax91.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax91.set_xlim([sed_kzmin, sed_kzmax])
 #locator=LogLocator.set_params(base=None, subs=None, numdecs=None, numticks=3)
 #ax91.xaxis.set_major_locator(ticker.LogLocator(numticks=2))
+#ax91.xaxis.set_major_locator(ticker.LogLocator(base = 10))
 #ax91.xaxis.set_major_locator(locator)
 ax91.set_xticks(np.arange(sed_kzmin,sed_kzmax +(sed_kzmax- sed_kzmin)/2. ,(sed_kzmax- sed_kzmin)/2.))
 #ax91.set_xticks(np.arange(0,sed_kzmax+ (sed_kzmax/2),(sed_kzmax/2)))
@@ -905,9 +910,8 @@ ax92.spines['top'].set_color('r')
 ax92.plot(sal, depth_sed, 'ro-',sal, depth_sed, 'ro-')
 ax92.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax92.set_xlim([sed_salmin, sed_salmax])
-ax92.set_xticks(np.arange(sed_salmin,sed_salmax+((sed_salmax -sed_salmin)/4),((sed_salmax -sed_salmin)/4)))
+ax92.set_xticks(np.arange(sed_salmin,sed_salmax+((sed_salmax -sed_salmin)/2.),((sed_salmax -sed_salmin)/2.)))
 ax92.set_ylim([y3max, y3min])
-
 ax92.annotate(r'$\rm S $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='r')
@@ -921,6 +925,7 @@ ax93.spines['top'].set_color('b')
 ax93.plot(temp,depth_sed,'bo-',temp,depth_sed,'bo-')
 ax93.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax93.set_xlim([tempmin, tempmax])
+ax93.set_xticks(np.arange(tempmin,tempmax+((tempmax - tempmin)/2.),((tempmax - tempmin)/2.)))
 ax93.set_ylim([y3max, y3min])
 ax93.annotate(r'$\rm T $', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
@@ -937,6 +942,14 @@ ax10.yaxis.grid(True,'minor')
 ax10.yaxis.grid(True,'major')
 ax10.set_xlim([sed_so4min, sed_so4max])
 ax10.set_xticks(np.arange(sed_so4min,sed_so4max,(sed_so4max - sed_so4min)))
+
+plt.text(1.1, 0.7,'BBL ', fontweight='bold', # draw legend to BBL
+         bbox={'facecolor': bbl_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
+    transform=ax10.transAxes)
+plt.text(1.1, 0.3,'Sediment ', fontweight='bold', #draw legend to Sediment
+         bbox={'facecolor': sed_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
+    transform=ax10.transAxes)
+
 
 #Fig1 Sediment - 2/3 SO4
 ax101 = ax10.twiny()
@@ -1149,10 +1162,6 @@ ax125.annotate(r'$\rm MnCO _3 $', xy=(labelaxis_x,labelaxis5_y), ha='left', va='
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='c')
 
-
-
-
-
 #Fig1 Sediment - 3/3 PO4
 axn11n = plt.subplot(gs1[0,2])
 #axn11.plot(po4,depth,'go-',po4,depth,'go-')
@@ -1327,6 +1336,9 @@ fig2 = plt.figure(figsize = (24,15))
 
 ''' Water 1/1 '''
 ax1 = plt.subplot(gs[0])
+plt.text(0, 1.5,'Day '+ numday , fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor':'#c9ecfd', 'alpha':0.5, 'pad':10}, fontsize=14,
+    transform=ax1.transAxes)
 #Fig 2 Water 1/1
 ax1.set_ylabel('Depth (m)')
 ax1.set_ylim([y1max, 0])
@@ -1541,6 +1553,9 @@ axn32.annotate(r'$\rm \Omega Ar $', xy=(labelaxis_x,labelaxis2_y), ha='left', va
 
 #fig 2 Water - 4/1
 axn4 = plt.subplot(gs[5])
+plt.text(1.1, 0.5,'Water ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90, 
+    transform=axn4.transAxes)
 #fig 2 Water -  4/1 Si
 plt.setp(axn4.get_xticklabels(), visible=False)
 axn4.set_ylim([y1max, 0])
@@ -1676,6 +1691,13 @@ plt.setp(axn8.get_xticklabels(), visible=False)
 axn8.set_xlim([0,simax])
 axn8.set_xticks(np.arange(0,simax+simax/2,simax/2))
 axn8.set_ylim([y2max, y2min])
+
+plt.text(1.1, 0.7,'Water ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
+    transform=axn8.transAxes)
+plt.text(1.1, 0.3,'BBL ', fontweight='bold', #Write number of day to Figure
+         bbox={'facecolor': bbl_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
+    transform=axn8.transAxes)
 #fig 3 BBL - 4/2 - Si_part
 axn82 = axn8.twiny()
 axn82.plot(si_part, depth, 'mo-',si_part, depth, 'mo-')
@@ -1938,6 +1960,12 @@ axn112.annotate(r'$\rm \Omega Ar $', xy=(labelaxis_x,labelaxis2_y), ha='left', v
 
 #fig 3 Sediment - 4/3 Si
 axn12n = plt.subplot(gs1[0,5])
+plt.text(1.1, 0.7,'BBL ', fontweight='bold', # draw legend to BBL
+         bbox={'facecolor': bbl_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
+    transform=axn12n.transAxes)
+plt.text(1.1, 0.3,'Sediment ', fontweight='bold', #draw legend to Sediment
+         bbox={'facecolor': sed_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
+    transform=axn12n.transAxes)
 plt.setp(axn12n.get_xticklabels(), visible=False)
 axn12n.set_ylim([y3max, y3min])
 # draw minor gridlines
@@ -1948,7 +1976,9 @@ axn12n.yaxis.grid(True,'minor')
 axn12n.yaxis.grid(True,'major')
 axn12n.set_xticks(np.arange(0,sed_si_partmax+sed_si_partmax,sed_si_partmax))
  # This makes axis label to be written in full scalar mode
+
 axn12n.yaxis.set_major_formatter(y_formatter) # ( not exp as default)
+
 axn121 = axn12n.twiny()
 axn121.plot(si,depth_sed,'go-',si,depth_sed,'go-')
 for spinename, spine in axn121.spines.iteritems():
@@ -2013,12 +2043,11 @@ axn9.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alp
 axn9.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 
 # save the figure to file
-fig1.savefig('fig1O2H2S.png')
-fig2.savefig('fig2PhyHet.png')
 
+fig1.savefig('fig1O2H2S - day'+numday+'.png')    
+fig2.savefig('fig2PhyHet- day'+numday+'.png')
 
-
-plt.show()
+#plt.show()
 
 plt.close(fig1)
 plt.close(fig2)
