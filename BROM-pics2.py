@@ -8,17 +8,16 @@ import matplotlib.patches as mpatches
 
 y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)   #format y scales to be scalar
 majorLocator = MultipleLocator(2.)
-majorFormatter = y_formatter #FormatStrFormatter('%d')
+majorFormatter = y_formatter 
 minorLocator = MultipleLocator(1.)
-#minorFormatter = FormatStrFormatter('%d')
 
 style.use('ggplot')
 
-values=[]                                  # create empty matrix for storing data
+values=[]   # create empty matrix for storing data
 
 f = None
 try:
-    #f = open('output_40_day.dat', 'rb') #open model output file, 'read binary'        
+    #f = open('output.dat', 'rb') #open model output file, 'read binary'        
     f = open('output_330_day.dat', 'rb') 
     line = f.readline()
     date = line.split()   
@@ -40,17 +39,26 @@ finally:
         f.close()
     print("(Cleaning up: Closed the file)")
 
+#depth limits for Water,BBL, and Sediment
+y1min = 0
+y1max = 109
+y2min = 109
+y2max = 110 #(sed_wat interface)
+y3min = -10 #109.91
+y3max = 10 #110.10
+ysedmin = -8 #for depth in cm
+ysedmax = 10
+
 data = zip(*values) #transpose the matrix of data
 
 depth = data[2][1:]
-
 to_float = []
 for item in depth:
     to_float.append(float(item)) #make a list of floats from tuple 
 depth_sed = [] # list for storing final depth data for sediment 
 v=0  
 for i in to_float:
-    v = (i- 110)*100 #(sed_wat interface)
+    v = (i- y2max)*100  #convert depth from m to cm
     depth_sed.append(v)
     
 temp = data[3][1:]
@@ -96,30 +104,20 @@ om_ar = data[59][1:]
 co3 = data[60][1:]
 ca = data[61][1:]
 
-#limits for Water,BBL, and Sediment
-y1min = 0
-y1max = 109
-y2min = 109
-y2max = 110
-y3min = -10 #109.91
-y3max = 10 #110.10
-ysedmin = -8 #for depth in cm
-ysedmax = 10
-
 #for filling the font
-y2min_fill_bbl = y2max_fill_water = 109.5
+y2min_fill_bbl = y2max_fill_water = 109.5 #BBL-water interface
 y3max_fill_bbl = 0
 y3min_fill_sed = 0
 xticks =(np.arange(0,100000))
 
-wat_color = '#c9ecfd'
-bbl_color = '#2873b8' #'#d2a87e'
+wat_color = '#c9ecfd' #colors for filling water,bbl and sedimnet 
+bbl_color = '#2873b8' 
 sed_color = '#916012'
-alpha_wat = 0.3
+alpha_wat = 0.3 # saturation of color (from 0 to 1) 
 alpha_bbl = 0.3
 alpha_sed = 0.5
 
-#limits for x   WatBBL axes:
+#limits for x at Water and BBL axes:
 kzmin = 1.e-7
 kzmax = 1.e-0
 salmin = 35
@@ -219,14 +217,14 @@ sed_om_armax = 5
 sed_co3max = 10
 sed_camax = 10
 
-#positions for axes
+#positions for different axes, sharing one subplot
 axis1 = 0
 axis2 = 27
 axis3 = 53
 axis4 = 79
 axis5 = 105
 
-labelaxis_x =  1.10
+labelaxis_x =  1.10 #positions of labels 
 labelaxis1_y = 1.02
 labelaxis2_y = 1.15
 labelaxis3_y = 1.26
@@ -236,7 +234,7 @@ labelaxis5_y = 1.48
 #define grid of subplots (BBL and Water)
 wspace=0.40
 hspace = 0.05
-gs = gridspec.GridSpec(2, 6)
+gs = gridspec.GridSpec(2, 6) 
 gs.update(left=0.06, right=0.93,top = 0.86,bottom = 0.4, wspace=wspace,hspace=hspace)
 gs1 = gridspec.GridSpec(1, 6)
 gs1.update(left=0.06, right=0.93, top = 0.26, bottom = 0.02, wspace=wspace,hspace=hspace)
@@ -262,7 +260,7 @@ plt.setp(ax1.get_xticklabels(), visible=False)
 ax1.set_xlim([kzmin,kzmax])
 ax1.set_xticks(np.arange(kzmin,2*kzmax ,(kzmax)))
 plt.text(0, 1.5,'Day '+ numday , fontweight='bold', #Write number of day to Figure
-         bbox={'facecolor':'#c9ecfd', 'alpha':0.5, 'pad':10}, fontsize=14,
+         bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14,
     transform=ax1.transAxes)
 #Fig1  water Kz
 ax11 = ax1.twiny()
@@ -275,14 +273,14 @@ plt.semilogx(kz,depth,'g-')
 plt.grid(True)
 ax11.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax11.set_xticks(np.arange(kzmin,kzmax +(kzmax- kzmin)/2. ,(kzmax- kzmin)/2.))
-#ax11.xaxis.set_major_locator(ticker.LogLocator(base = 1.e-10))
+#ax11.xaxis.set_major_locator(ticker.LogLocator(base = 1.e-10)) # can make xaxis logarithmic
 ax11.set_xlim(kzmin, kzmax)
 #ax11.set_xticks(np.arange(1.e-6,(1.e-0)+ ((1.e-0 - 1.e-6)/2.),((1.e-0 - 1.e-6)/2.)))
 ax11.set_ylim([y1max, 0])
 ax11.annotate(r'$\rm Kz $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='g')
-ax11.tick_params(direction='out', pad=0) # remove distance between labels and axis
+ax11.tick_params(direction='out', pad=0) # remove a distance between labels and axis
 
 #Fig1 Water 1/1 Salinity
 ax12 = ax1.twiny()
@@ -299,12 +297,9 @@ ax12.set_ylim([y1max, 0])
 ax12.annotate(r'$\rm S $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='r')
-ax12.tick_params(direction='out', pad=0) # remove distance between labels and axis
-#Fig1 Water Temperature
+ax12.tick_params(direction='out', pad=0) # remove a distance between labels and axis
 
-ax12.tick_params(direction='out', pad=0) # remove distance between labels and axis
 #Fig1 Water Temperature 
-
 ax13 = ax1.twiny()
 for spinename, spine in ax13.spines.iteritems():
     if spinename != 'top':
@@ -343,7 +338,7 @@ ax21.spines['top'].set_color('g')
 ax21.annotate(r'$\rm SO _4 $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='g')
-ax21.tick_params(direction='out', pad=0) # remove distance berween labels and axis
+ax21.tick_params(direction='out', pad=0) # remove distance between labels and axis
 #Fig1 Water -  2/1 S0
 ax22 = ax2.twiny()
 for spinename, spine in ax22.spines.iteritems():
@@ -359,7 +354,7 @@ ax22.set_ylim([y1max, 0])
 ax22.annotate(r'$\rm S ^0$', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='r')
-ax22.tick_params(direction='out', pad=0) # remove distance berween labels and axis
+ax22.tick_params(direction='out', pad=0) # remove distance between labels and axis
 #Fig1 Water -  2/1 H2S
 ax23 = ax2.twiny()
 for spinename, spine in ax23.spines.iteritems():
@@ -371,12 +366,11 @@ ax23.plot(h2s, depth, 'b-',h2s, depth, 'b-')
 ax23.annotate(r'$\rm H _2 S$', xy=(labelaxis_x,labelaxis3_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='b')
-
 ax23.xaxis.set_ticks_position('top') # this moves the ticks to the top
 ax23.set_xlim([0, h2smax])
 ax23.set_xticks(np.arange(0,h2smax+h2smax/2.,h2smax/2.))
 ax23.set_ylim([y1max, 0])
-ax23.tick_params(direction='out', pad=0) # remove distance berween labels and axis
+ax23.tick_params(direction='out', pad=0) # remove distance between labels and axis
 #Fig1 Water - 2/1 s2o3
 ax24 = ax2.twiny()
 for spinename, spine in ax24.spines.iteritems():
@@ -392,7 +386,7 @@ ax24.set_ylim([y1max, 0])
 ax24.annotate(r'$\rm S _2 O_ 3$', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='m')
-ax24.tick_params(direction='out', pad=0) # remove distance berween labels and axis
+ax24.tick_params(direction='out', pad=0) # remove distance between labels and axis
 #Fig1 Water 3/1
 ax3 = plt.subplot(gs[1])
 plt.setp(ax3.get_xticklabels(), visible=False)
@@ -478,7 +472,6 @@ ax41.spines['top'].set_position(('outward', axis1))
 ax41.spines['top'].set_color('g')
 ax41.set_xlim([0, mn2max])
 #ax41.set_xticks(np.arange(0,(mn2max+mn2max/4),mn2max/4))
-#ax41.set_xlabel('Mn II',color = 'g')
 ax41.annotate(r'$\rm MnII $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = 16,
             color='g')
@@ -612,7 +605,6 @@ axn41.annotate(r'$\rm FeII $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='cen
             color='g')
 
 #Fig1 Water -  4/1 - FeIII
-
 axn42 = axn4.twiny()
 for spinename, spine in axn42.spines.iteritems():
     if spinename != 'top':
@@ -623,7 +615,6 @@ axn42.plot(fe3,depth,'r-',fe3,depth,'r-')
 axn42.xaxis.set_ticks_position('top') # this moves the ticks to the top
 axn42.set_xlim([0, fe3max])
 #axn42.set_xticks(np.arange(0,fe3max+fe3max/2,fe3max/2))
-#axn32.set_xticks(np.arange(0,1500,500))
 axn42.set_ylim([y1max, 0])
 axn42.annotate(r'$\rm FeIII $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
@@ -688,14 +679,12 @@ plt.setp(ax53.get_xticklabels(), visible=False)
 
 #Fig1  BBL 2/2
 ax6 = plt.subplot(gs[11])
-
 plt.text(1.1, 0.7,'Water ', fontweight='bold', #Write number of day to Figure
          bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
     transform=ax6.transAxes)
 plt.text(1.1, 0.3,'BBL ', fontweight='bold', #Write number of day to Figure
          bbox={'facecolor': bbl_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
     transform=ax6.transAxes)
-
 #Fig1  BBL - SO4
 ax6.plot(so4,depth,'go-',so4,depth,'go-')
 ax6.set_xlim([so4min, so4max])
@@ -879,7 +868,7 @@ ax91.set_ylim([y3max, y3min])
 ax91.annotate(r'$\rm Kz $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='g')
-#Fig1 Sediment - 1/3 SAlinity
+#Fig1 Sediment - 1/3 Salinity
 ax92 = ax9.twiny()
 for spinename, spine in ax92.spines.iteritems():
     if spinename != 'top':
@@ -928,7 +917,6 @@ plt.text(1.1, 0.7,'BBL ', fontweight='bold', # draw legend to BBL
 plt.text(1.1, 0.3,'Sediment ', fontweight='bold', #draw legend to Sediment
          bbox={'facecolor': sed_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
     transform=ax10.transAxes)
-
 
 #Fig1 Sediment - 2/3 SO4
 ax101 = ax10.twiny()
@@ -1267,7 +1255,7 @@ axn124.set_ylim([ysedmax, y3min])
 axn124.annotate(r'$\rm FeS _2 $', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='m')
-#ysedmax, ysedmin
+
 #fill the font
 #wat
 ax1.fill_between(xticks, y1max, y1min, facecolor= wat_color, alpha=alpha_wat)
@@ -1276,30 +1264,28 @@ ax3.fill_between(xticks, y1max, y1min, facecolor= wat_color, alpha=alpha_wat)
 ax4.fill_between(xticks, y1max, y1min, facecolor= wat_color, alpha=alpha_wat)
 axn3.fill_between(xticks, y1max, y1min, facecolor= wat_color, alpha=alpha_wat)
 axn4.fill_between(xticks, y1max, y1min, facecolor= wat_color, alpha=alpha_wat)
-
-#bbl
+#wat
 ax5.fill_between(xticks, y2max_fill_water, y2min, facecolor= wat_color, alpha=alpha_wat)
 ax6.fill_between(xticks, y2max_fill_water, y2min, facecolor= wat_color, alpha=alpha_wat)
 ax7.fill_between(xticks, y2max_fill_water, y2min, facecolor= wat_color, alpha=alpha_wat)
 axn7.fill_between(xticks, y2max_fill_water, y2min, facecolor= wat_color, alpha=alpha_wat)
 ax8.fill_between(xticks, y2max_fill_water, y2min, facecolor= wat_color, alpha=alpha_wat)
 axn8.fill_between(xticks, y2max_fill_water, y2min, facecolor= wat_color, alpha=alpha_wat)
-
+#bbl
 ax5.fill_between(xticks, y2max, y2min_fill_bbl, facecolor= bbl_color, alpha=alpha_bbl)
 ax6.fill_between(xticks, y2max, y2min_fill_bbl, facecolor= bbl_color, alpha=alpha_bbl)
 ax7.fill_between(xticks, y2max, y2min_fill_bbl, facecolor= bbl_color, alpha=alpha_bbl)
 axn7.fill_between(xticks, y2max, y2min_fill_bbl, facecolor= bbl_color, alpha=alpha_bbl)
 ax8.fill_between(xticks, y2max, y2min_fill_bbl, facecolor= bbl_color, alpha=alpha_bbl)
 axn8.fill_between(xticks, y2max, y2min_fill_bbl, facecolor= bbl_color, alpha=alpha_bbl)
-
-#sed
+#bbl
 ax9.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 ax10.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 axn11n.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 ax11n.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 axn12n.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 ax12n.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
-
+#sed
 ax9.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alpha_sed)
 ax10.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alpha_sed)
 axn11n.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alpha_sed)
@@ -1464,7 +1450,6 @@ axn2.set_ylim([y1max, 0])
 plt.setp(axn2.get_xticklabels(), visible=False)
 axn2.set_xlim([alkmin, alkmax])
 axn2.set_xticks(np.arange(alkmin,alkmax+((alkmax - alkmin)/2),((alkmax - alkmin)/2)))
-#ax2.set_xticks(np.arange(20000,so4max,2000))
 axn21 = axn2.twiny()
 for spinename, spine in axn21.spines.iteritems():
     if spinename != 'top':
@@ -1801,11 +1786,6 @@ ax104.annotate(r'$\rm Baae $', xy=(labelaxis_x,labelaxis4_y), ha='left', va='cen
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='m')
 
-
-
-
-
-
 #fig 3 Sediment
 #fig 3 Sediment - 1/3
 axn9 = plt.subplot(gs1[0,2])
@@ -1850,7 +1830,6 @@ axn92.annotate(r'$\rm pCO _2 $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='c
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='r')
 
-
 #fig 3 Sediment - 2/3
 axn10 = plt.subplot(gs1[0, 3])
 axn10.set_ylim([y3max, y3min])
@@ -1860,7 +1839,6 @@ axn10.yaxis.set_major_formatter(majorFormatter)
 axn10.yaxis.set_minor_locator(minorLocator)
 axn10.yaxis.grid(True,'minor')
 axn10.yaxis.grid(True,'major')
-
 plt.setp(axn10.get_xticklabels(), visible=False)
 axn10.set_xlim([sed_dicmin, sed_dicmax])
 axn10.set_xticks(np.arange(sed_dicmin,sed_dicmax+((sed_dicmax - sed_dicmin)),((sed_dicmax - sed_dicmin))))
@@ -1897,7 +1875,6 @@ axn102.annotate(r'$\rm DIC $', xy=(labelaxis_x,labelaxis2_y), ha='left', va='cen
 
 #fig 3 Sediment
 axn11n = plt.subplot(gs1[0,4])
-
 axn11n.set_ylim([y3max, y3min])
 # draw minor gridlines
 axn11n.yaxis.set_major_locator(majorLocator)
@@ -1954,8 +1931,7 @@ axn12n.yaxis.set_minor_locator(minorLocator)
 axn12n.yaxis.grid(True,'minor')
 axn12n.yaxis.grid(True,'major')
 axn12n.set_xticks(np.arange(0,sed_si_partmax+sed_si_partmax,sed_si_partmax))
- # This makes axis label to be written in full scalar mode
-
+ #This makes axis label to be written in full scalar mode
 axn12n.yaxis.set_major_formatter(y_formatter) # ( not exp as default)
 
 axn121 = axn12n.twiny()
@@ -2022,9 +1998,8 @@ axn9.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alp
 axn9.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 
 # save the figure to file
-
-fig1.savefig('fig1O2H2S - day'+numday+'.png')    
-fig2.savefig('fig2PhyHet- day'+numday+'.png')
+fig1.savefig('fig1-day'+numday+'.png')    
+fig2.savefig('fig2-day'+numday+'.png')
 
 #plt.show()
 
