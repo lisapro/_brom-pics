@@ -198,7 +198,8 @@ plt.setp(ax1.get_xticklabels(), visible=False)
 ax1.set_xlim([kzmin,kzmax])
 ax1.set_xticks(np.arange(kzmin,2*kzmax ,(kzmax)))
 
-plt.text(0, 1.5,'day'+ str(numday) , fontweight='bold', #Write number of day to Figure
+
+plt.text(0, 1.5,'day%i ' % (numday), fontweight='bold', #Write number of day to Figure
          bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14,
     transform=ax1.transAxes)
 
@@ -1933,11 +1934,12 @@ axn9.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alp
 
 
 
-plt.show()
 
 # save the figure to file 
-fig1.savefig('fig1-day'+str(numday)+'.png')    
-fig2.savefig('fig2-day'+str(numday)+'.png')
+fig1.savefig('fig1-%i day.png' % (numday)) 
+fig2.savefig('fig2-%i day.png' % (numday))  
+
+plt.show()
 
 plt.close(fig1)
 plt.close(fig2)
