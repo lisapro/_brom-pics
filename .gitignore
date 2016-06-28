@@ -7,3 +7,6 @@ __pycache__/
 *~
 # png files
 *.png
+
+# nc files 
+*.nc

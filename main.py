@@ -14,7 +14,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib as mpl
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter #,LogLocator
 #import matplotlib.patches as mpatches
-from matplotlib.widgets import Slider, Button#, RadioButtons
+#from matplotlib.widgets import Slider, Button#, RadioButtons
 
 
 y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)   #format y scales to be scalar
@@ -53,7 +53,7 @@ kzmax = 1.e-0
 salmin = 34.6
 salmax = 35.2
 tempmin = 7.3
-tempmax =8.3
+tempmax = 8.4
 so4min = 10000
 so4max = 30000
 h2smax = 3
@@ -61,7 +61,7 @@ s0max = 3
 s2o3max = 12 
 o2max = 500
 nh4max = 10
-no2max = 2
+no2max = 20
 no3max = 100
 mnco3max = 1
 mnsmax = 0.5
@@ -72,7 +72,7 @@ phymax = 2
 hetmax = 10
 baaemax = 1
 bhaemax = 2
-bhanmax = 1
+bhanmax = 2
 baanmax = 2
 nh4max = 50
 ponmax = 80
@@ -180,7 +180,7 @@ mpl.rc('axes', titlesize = 22,labelsize = 20)
 y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)   #format y scales to be scalar 
 mpl.rc('xtick', direction = 'out')
 mpl.rc('xtick.major',pad = 0 )             
-numday = 330 # day to plot 
+numday = 40#330 # day to plot 
 
 
 ####################################
@@ -197,9 +197,11 @@ ax1.set_ylim([y2min, 0])
 plt.setp(ax1.get_xticklabels(), visible=False)
 ax1.set_xlim([kzmin,kzmax])
 ax1.set_xticks(np.arange(kzmin,2*kzmax ,(kzmax)))
-plt.text(0, 1.5,numday , fontweight='bold', #Write number of day to Figure
+
+plt.text(0, 1.5,'day'+ str(numday) , fontweight='bold', #Write number of day to Figure
          bbox={'facecolor': wat_color, 'alpha':0.5, 'pad':10}, fontsize=14,
     transform=ax1.transAxes)
+
 
 #Fig1  water Kz
 ax11 = ax1.twiny()
@@ -1184,7 +1186,6 @@ axn124.set_ylim([ysedmax, y3min])
 axn124.annotate(r'$\rm FeS _2 $', xy=(labelaxis_x,labelaxis4_y), ha='left', va='center',
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='m')
-
 #fill the font
 #wat
 ax1.fill_between(xticks, y1max, y1min, facecolor= wat_color, alpha=alpha_wat)
@@ -1222,7 +1223,8 @@ ax11n.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=al
 ax12n.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alpha_sed)
 axn12n.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alpha_sed)
 
-'''
+
+
 ####################################
 ############# Figure 2 #############
 ####################################
@@ -1230,7 +1232,7 @@ fig2 = plt.figure(figsize = (24,15))
 
 ## Water 1/1 
 ax1 = plt.subplot(gs[0])
-plt.text(0, 1.5,numday , fontweight='bold', #Write number of day to Figure
+plt.text(0, 1.5,'day'+ str(numday), fontweight='bold', #Write number of day to Figure
          bbox={'facecolor':'#c9ecfd', 'alpha':0.5, 'pad':10}, fontsize=14,
     transform=ax1.transAxes)
 #Fig 2 Water 1/1
@@ -1925,7 +1927,7 @@ axn10.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=al
 axn10.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
 axn9.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alpha_sed)
 axn9.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)
-'''
+
 
 
 
@@ -1934,8 +1936,8 @@ axn9.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alp
 plt.show()
 
 # save the figure to file 
-fig1.savefig('fig1-day'+'numday'+'.png')    
-#fig2.savefig('fig2-day.png')
+fig1.savefig('fig1-day'+str(numday)+'.png')    
+fig2.savefig('fig2-day'+str(numday)+'.png')
 
 plt.close(fig1)
-#plt.close(fig2)
+plt.close(fig2)
