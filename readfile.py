@@ -14,7 +14,7 @@ my_example_nc_file = 'BROM_out.nc'
 try: 
     fh = Dataset(my_example_nc_file, mode='r')
 #    process(fh)
-    print fh.variables
+
 #numday = fh.variables['time'][:] 
     alk = fh.variables['Alk'][:] 
     fickAlk = fh.variables['fick:Alk'][:]
