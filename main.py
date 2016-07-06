@@ -5,16 +5,94 @@ Created on 23. jun. 2016
 
 #!/usr/bin/python
 # Filename: main.py
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+from future_builtins import *
 from readfile import *   # import all variables from readfile
-
 import matplotlib.pyplot as plt
 from matplotlib import style
 import matplotlib.gridspec as gridspec
-#import numpy as np
+import numpy as np
 import matplotlib as mpl
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter #,LogLocator
 #import matplotlib.patches as mpatches
 #from matplotlib.widgets import Slider, Button#, RadioButtons
+
+
+import sys
+from math import *
+from PyQt4.QtCore import Qt
+from PyQt4.QtCore import pyqtSignal as Signal
+from PyQt4.QtGui import (QApplication, QDialog, QLineEdit, QTextBrowser,
+        QComboBox,QGridLayout,QLabel,QDoubleSpinBox)
+
+
+class Form(QDialog):
+
+    def __init__(self, parent=None):
+        super(Form, self).__init__(parent)
+        self.create_widgets()
+        self.layout_widgets()
+        self.create_connections()
+        self.updateUi()
+
+
+    def create_widgets(self):
+        self.toLabelPrincipal = QLabel("Principal:") #initial value to box
+        self.principalSpinBox = QDoubleSpinBox()
+        self.principalSpinBox.setRange(0, 1000000000)
+        self.principalSpinBox.setValue(10)
+        self.principalSpinBox.setPrefix("$ ")
+        
+        self.toLabelRate = QLabel("Rate:") #initial value to box       
+        self.rateSpinBox = QDoubleSpinBox()
+        self.rateSpinBox.setRange(0, 100)     
+        self.rateSpinBox.setValue(5)              
+        self.rateSpinBox.setSuffix(" %")
+           
+        self.toLabelYears = QLabel("Years:") #initial value to box               
+        self.yearsComboBox = QComboBox()
+        self.yearsComboBox.addItem("1 year")
+        self.yearsComboBox.addItems(
+                ["{0} years".format(x) for x in range(2, 26)])   
+        self.toLabelAmount = QLabel("Amount ") #initial value to box                     
+        self.amount = QLabel()
+                
+
+    def layout_widgets(self):
+        grid = QGridLayout() #lay out widgets      
+        grid.addWidget(self.toLabelPrincipal, 1, 1)         
+        grid.addWidget(self.principalSpinBox, 1, 2)
+        grid.addWidget(self.toLabelRate, 2, 1)        
+        grid.addWidget(self.rateSpinBox, 2, 2)  
+        grid.addWidget(self.toLabelYears, 3, 1)               
+        grid.addWidget(self.yearsComboBox, 3, 2)
+        grid.addWidget(self.toLabelAmount, 4, 1)        
+        grid.addWidget(self.amount, 4, 2)        
+
+        self.setLayout(grid)    
+            
+    def create_connections(self):
+        self.principalSpinBox.valueChanged.connect(self.updateUi)
+        self.rateSpinBox.valueChanged.connect(self.updateUi)
+        self.yearsComboBox.currentIndexChanged.connect(self.updateUi)
+
+
+    def updateUi(self):
+        """Calculates compound interest"""
+        principal = self.principalSpinBox.value()
+        rate = self.rateSpinBox.value()
+        years = self.yearsComboBox.currentIndex() + 1
+        amount = principal * ((1 + (rate / 100.0)) ** years)
+        self.amount.setText("$ {0:.2f}".format(amount))        
+
+
+
+
+
+
+
 
 
 y_formatter = mpl.ticker.ScalarFormatter(useOffset=False)   #format y scales to be scalar
@@ -1936,10 +2014,13 @@ axn9.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alp
 
 
 # save the figure to file 
-fig1.savefig('fig1-%i day.png' % (numday)) 
-fig2.savefig('fig2-%i day.png' % (numday))  
-
-plt.show()
-
-plt.close(fig1)
-plt.close(fig2)
+#fig1.savefig('fig1-%i day.png' % (numday)) 
+#fig2.savefig('fig2-%i day.png' % (numday))  
+#plt.show()
+#plt.close(fig1)
+#plt.close(fig2)
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    form = Form()
+    form.show()
+    app.exec_()
