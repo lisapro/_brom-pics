@@ -18,8 +18,8 @@ kzmin = 1.e-7
 kzmax = 1.e-0
 salmin = 34.6
 salmax = 35.2
-tempmin = 7.3
-tempmax =8.3
+tempmin = 6
+tempmax =9
 so4min = 10000
 so4max = 30000
 h2smax = 3
@@ -112,3 +112,17 @@ sed_om_camax = 10
 sed_om_armax = 5
 sed_co3max = 10
 sed_camax = 10
+
+#positions for different axes, sharing one subplot
+axis1 = 0
+axis2 = 27
+axis3 = 53
+axis4 = 79
+axis5 = 105
+
+labelaxis_x =  1.10 #positions of labels 
+labelaxis1_y = 1.02
+labelaxis2_y = 1.15
+labelaxis3_y = 1.26
+labelaxis4_y = 1.38
+labelaxis5_y = 1.48

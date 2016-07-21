@@ -1,4 +1,194 @@
-# -*- coding: utf-8 -*-
+import sys
+from PyQt4 import QtGui
+from PyQt4.QtGui import QSpinBox
+
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+import matplotlib.pyplot as plt
+#import matplotlib.rcParams as rc
+from readfile import *
+from limits import * 
+import matplotlib.gridspec as gridspec
+from matplotlib import style
+#import matplotlib as mpl
+
+class Window(QtGui.QDialog):
+    def __init__(self, parent=None):
+        super(Window, self).__init__(parent)
+
+        # a figure instance to plot on
+        self.figure = plt.figure(figsize = (24,15))
+
+        # this is the Canvas Widget that displays the `figure`
+        # it takes the `figure` instance as a parameter to __init__
+        self.canvas = FigureCanvas(self.figure)
+
+        # this is the Navigation widget
+        # it takes the Canvas widget and a parent
+        self.toolbar = NavigationToolbar(self.canvas, self)
+
+        # Just some button connected to `plot` method
+        self.button = QtGui.QPushButton('Plot')
+        self.button.clicked.connect(self.plot)
+        self.numdaySpinBox = QSpinBox()
+        self.numdaySpinBox.setRange(1, 366)
+        self.numdaySpinBox.setValue(100)
+        self.button.clicked.connect(self.plot)       
+        
+        # set the layout
+        layout = QtGui.QVBoxLayout()
+        layout.addWidget(self.toolbar)
+        layout.addWidget(self.canvas)
+        layout.addWidget(self.button)
+        layout.addWidget(self.numdaySpinBox)       
+        self.setLayout(layout)
+
+    def plot(self):
+        ''' plot some random stuff '''
+        plt.clf() #clear figure before updating 
+        numday = self.numdaySpinBox.value() #take the input value of numday
+        wspace=0.40
+        hspace = 0.05
+        gs = gridspec.GridSpec(2, 6) 
+        gs.update(left=0.06, right=0.93,top = 0.86,bottom = 0.4, wspace=wspace,hspace=hspace)
+        gs1 = gridspec.GridSpec(1, 6)
+        gs1.update(left=0.06, right=0.93, top = 0.26, bottom = 0.02, wspace=wspace,hspace=hspace)        
+        
+        style.use('ggplot')
+#        mpl.rc('xtick', direction = 'out')
+#        mpl.rc('xtick.major',pad = 0 )      
+  
+        # create an axis
+        ax00 = self.figure.add_subplot(gs[0])
+        ax10 = self.figure.add_subplot(gs[1])
+        ax20 = self.figure.add_subplot(gs[2])
+        ax30 = self.figure.add_subplot(gs[3])        
+        ax40 = self.figure.add_subplot(gs[4])
+        ax50 = self.figure.add_subplot(gs[5]) 
+        
+        ax01 = self.figure.add_subplot(gs[6])
+        ax11 = self.figure.add_subplot(gs[7])
+        ax21 = self.figure.add_subplot(gs[8])
+        ax31 = self.figure.add_subplot(gs[9])        
+        ax41 = self.figure.add_subplot(gs[10])
+        ax51 = self.figure.add_subplot(gs[11])  
+
+        ax02 = self.figure.add_subplot(gs1[0])
+        ax12 = self.figure.add_subplot(gs1[1])
+        ax22 = self.figure.add_subplot(gs1[2])
+        ax32 = self.figure.add_subplot(gs1[3])        
+        ax42 = self.figure.add_subplot(gs1[4])
+        ax52 = self.figure.add_subplot(gs1[5])
+        
+                      
+
+ 
+        def y_lim(axis):
+            if axis in (ax00,ax10,ax20,ax30,ax40,ax50):
+                axis.set_ylim([y2min, 0])
+            elif axis in (ax01,ax11,ax21,ax31,ax41,ax51):
+                axis.set_ylim([y2max, y2min]) 
+            elif axis in (ax02,ax12,ax22,ax32,ax42,ax52):
+                axis.set_ylim([y3max, y3min])      
+                
+                
+                           
+        ax00.set_ylabel('Depth (m)')
+        ax01.set_ylabel('Depth (m)')   
+        ax02.set_ylabel('Depth (cm)') 
+                     
+        ax00_1 = ax00.twiny() 
+        ax00_2 = ax00.twiny()  
+  
+        ax10_1 = ax10.twiny() 
+        ax10_2 = ax10.twiny() 
+        
+
+        
+        def spines(axis):        
+            for spinename, spine in axis.spines.iteritems():
+                if spinename != 'top':
+                    spine.set_visible(False)
+            if axis in (ax00_1,ax10_1):
+                axis.spines['top'].set_position(('outward', axis1))
+                axis.spines['top'].set_color('b')                 
+            elif axis in (ax00_2,ax10_2):    
+                axis.spines['top'].set_position(('outward', axis2))
+                axis.spines['top'].set_color('r')   
+                
+                
+        spines(ax00_1)
+        spines(ax00_2)                  
+        spines(ax10_1) 
+        spines(ax10_2)             
+        # discards the old graph
+#        ax.hold(False)
+#        ax1.hold(False)
+        #define limits for all axis
+        
+        #water subplots
+        y_lim(ax00) 
+        y_lim(ax10) 
+        y_lim(ax20) 
+        y_lim(ax30)         
+        y_lim(ax40) 
+        y_lim(ax50) 
+        #bbl subplots                
+        y_lim(ax01) 
+        y_lim(ax11)         
+        y_lim(ax21) 
+        y_lim(ax31)         
+        y_lim(ax41) 
+        y_lim(ax51)       
+        #sediment subplots        
+        y_lim(ax02) 
+        y_lim(ax12)         
+        y_lim(ax22) 
+        y_lim(ax32)         
+        y_lim(ax42) 
+        y_lim(ax52)  
+        
+          
+        ax00_1.set_xlim([tempmin,tempmax])      
+        ax00_2.set_xlim([salmin,salmax])  
+        
+        # plot data
+        ax00_1.plot(temp[numday],depth,'b-') 
+        ax00_2.plot(sal[numday],depth,'r-')       
+        # refresh canvas
+        self.canvas.draw()
+
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+
+    main = Window()
+    main.show()
+
+    sys.exit(app.exec_())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''# -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'untitled.ui'
 #
@@ -49,25 +239,8 @@ class MyMplCanvas(FigureCanvas):
         gs = gridspec.GridSpec(3, 6) 
         gs.update(left=0.06, right=0.93,top = 0.86,bottom = 0.20,wspace= 0.6,hspace= 0.05)
         self.ax1 = fig.add_subplot(gs[0])
-        self.ax2 = fig.add_subplot(gs[1]) 
-        self.ax3 = fig.add_subplot(gs[2])
-        self.ax4 = fig.add_subplot(gs[3])  
-        self.ax5 = fig.add_subplot(gs[4])
-        self.ax6 = fig.add_subplot(gs[5]) 
-        self.ax7 = fig.add_subplot(gs[6])
-        self.ax8 = fig.add_subplot(gs[7])
-        self.ax9 = fig.add_subplot(gs[8])
-        self.ax10= fig.add_subplot(gs[9]) 
-        self.ax11= fig.add_subplot(gs[10])
-        self.ax12= fig.add_subplot(gs[11])  
-        self.ax13= fig.add_subplot(gs[12])
-        self.ax14= fig.add_subplot(gs[13]) 
-        self.ax15= fig.add_subplot(gs[14])
-        self.ax16= fig.add_subplot(gs[15])
-        self.ax17= fig.add_subplot(gs[16])
-        self.ax18= fig.add_subplot(gs[17])       
+    
    
-          
         # We want the axes cleared every time plot() is called
         self.ax1.hold(False)
         self.compute_initial_figure()
@@ -92,50 +265,30 @@ class MyDynamicMplCanvas(MyMplCanvas):
 
     def compute_initial_figure(self):
 #        self.ax2.plot(temp[numday], depth,'r')
-        self.ax2.set_ylabel('Depth (m)')
-        self.ax2.set_ylim([y2min, 0])
-        plt.setp(self.ax1.get_xticklabels(), visible=False)
-        self.ax2.set_xlim([kzmin,kzmax])
-        self.ax2.set_xticks(np.arange(kzmin,2*kzmax ,(kzmax)))
-#        fig.text(0, 1.5,numday , fontweight='bold', #Write number of day to Figure
-#                 bbox={'facecolor': 'white', 'alpha':0.5, 'pad':10}, fontsize=14,
-#            transform=self.ax1.transAxes)
-#        self.ax2 = self.ax1.twiny()
-#        for spinename, spine in ax11.spines.iteritems():
-#            if spinename != 'top':
-#                spine.set_visible(False)
-#        self.ax11.spines['top'].set_position('outward') #, axis1))
-        self.ax2.spines['top'].set_color('g')
-        self.ax2.plot(sal[numday],depth,'g-')
-#        plt.grid(True)
-#        self.ax11.set_xticks(np.arange(kzmin,kzmax +(kzmax- kzmin)/2. ,(kzmax- kzmin)/2.))
-#ax11.xaxis.set_major_locator(ticker.LogLocator(base = 1.e-10)) # can make xaxis logarithmic
-        self.ax2.set_xlim(salmin, salmax)
-#ax11.set_xticks(np.arange(1.e-6,(1.e-0)+ ((1.e-0 - 1.e-6)/2.),((1.e-0 - 1.e-6)/2.)))
-        self.ax2.set_ylim([y1max, 0])
-#        self.ax11.annotate(r'$\rm Kz $', xy=(labelaxis_x,labelaxis1_y), ha='left', va='center',
-#            xycoords='axes fraction',  fontsize = xlabel_fontsize,color='g')
-#        self.draw()
 
+        self.ax1.plot(sal[numday],depth,'g-')
 
     def update_figure(self):
         print "called update figure"
-        getvalue = ApplicationWindow()
 
+        getvalue = ApplicationWindow()
         numday = getvalue.updateUi() #SpinBox.value()
+
+        intnumday = int(numday)
+        print numday
+        self.ax1.plot(sal[intnumday],depth,'g-')      
 #        numday = int(numday)
 #       numday = getvalue.numday()
-        print numday
+
 #        numday = 160 #getvalue.numday()
 #        numday = getvalue.self.numday
-        print numday
+
 #        n = numday 
 #        self.ax1.plot(sal[n],depth,'b-')
         # Build a list of 4 random integers between 0 and 10 (both inclusive)
 #        l = self.numday
 #        self.ax1.plot([0, 1, 2, 3],l,'r')
         self.draw()
-
 
 class ApplicationWindow(QtGui.QMainWindow):
 #    MyDynamicMplCanvas.update_figure() 
@@ -162,25 +315,28 @@ class ApplicationWindow(QtGui.QMainWindow):
         self.main_widget = QtGui.QWidget(self)
 
         l = QtGui.QVBoxLayout(self.main_widget)
-#        currentnumdayLabel = QLabel('Current numday: ')
-#        self.numdaySpinBox = QSpinBox()
-#        applyButton = QPushButton('Apply')  
+        self.currentnumdayResultLabel = QLabel('Current day: ')
+        self.numdaySpinBox = QSpinBox()
+        self.applyButton = QPushButton('Apply')  
         self.currentnumdayResultLabel1 = QLabel() 
-
-
-      
-
-        l.addWidget(self.currentnumdayResultLabel1) 
-#        l.addWidget(self.numdaySpinBox) 
-#        l.addWidget(applyButton)
+        l.addWidget(self.currentnumdayResultLabel) 
+        l.addWidget(self.numdaySpinBox) 
+        l.addWidget(self.applyButton)
         dc = MyDynamicMplCanvas(self.main_widget, width=5, height=4, dpi=100)
         l.addWidget(dc)       
         self.main_widget.setFocus()
         self.setCentralWidget(self.main_widget)
-
-#        self.statusBar().showMessage("All hail matplotlib!", 2000)
+        self.numdaySpinBox.valueChanged.connect(self.updateUi)
+        toconnect = MyDynamicMplCanvas()
+#        self.applyButton.clicked.connect(toconnect.update_figure)
+#        toconnect = MyDynamicMplCanvas()
+#        self.ok.clicked.connect(toconnect.update_figure)
+        self.applyButton.clicked.connect(toconnect.update_figure)         
+        numday2 = self.numdaySpinBox.value()
+        self.statusBar().showMessage("Wait", 2000)
+        return numday2 
 #        self.numday()
-#        self.updateUi()  
+        self.updateUi()  
     def fileQuit(self):
         self.close()
 
@@ -189,13 +345,13 @@ class ApplicationWindow(QtGui.QMainWindow):
 
     def about(self):
         QtGui.QMessageBox.about(self, "About", 
-                                '''embedding_in_qt4.py example                            
-Copyright 
-Needs to be filled 
-It may be used and modified with no restriction; raw copies as well as
-modified versions may be distributed without limitation.''')
+                                '''#embedding_in_qt4.py example                            
+#Copyright 
+#Needs to be filled 
+#It may be used and modified with no restriction; raw copies as well as
+#modified versions may be distributed without limitation.''')
 
-    def numday(self):
+'''    def numday(self):
         dialog = QtGui.QDialog()
         self.text = QLabel("Choose day to plot")
         self.numdayLabel = QLabel("day:")
@@ -229,16 +385,14 @@ modified versions may be distributed without limitation.''')
            
     def updateUi(self):
         """Takes the new value of numday """
+
         numday2 = self.numdaySpinBox.value()
-        print type(numday2)
+#        print type(numday2)
         printnumday = str(numday2)
-        print "numday: "+printnumday
+#        print "numday: "+printnumday
         self.currentnumdayResultLabel.setText(printnumday)
-        self.currentnumdayResultLabel1.setText('Current day:'+printnumday)  
-        toconnect = MyDynamicMplCanvas()
-        self.ok.clicked.connect(toconnect.update_figure)
-         
-        return printnumday     
+        self.currentnumdayResultLabel.setText('Current day:'+printnumday)  
+    
 #        self.dialog.exec_()           
 
 qApp = QtGui.QApplication(sys.argv)
@@ -247,4 +401,4 @@ aw = ApplicationWindow()
 aw.setWindowTitle("%s" % progname)
 aw.show()
 sys.exit(qApp.exec_())
-#qApp.exec_()
+#qApp.exec_()'''
