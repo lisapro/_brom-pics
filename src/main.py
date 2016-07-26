@@ -319,7 +319,7 @@ ax24.annotate(r'$\rm S _2 O_ 3$', xy=(labelaxis_x,labelaxis4_y), ha='left', va='
             xycoords='axes fraction',  fontsize = xlabel_fontsize,
             color='m')
 
-#Fig1 Water 3/1
+#Fig1 Water 2/1
 ax3 = plt.subplot(gs[1])
 plt.setp(ax3.get_xticklabels(), visible=False)
 ax3.set_ylim([y1max, 0])

@@ -14,6 +14,7 @@ ysedmin = -8 #for depth in cm
 ysedmax = 10
 
 #limits for x at Water and BBL axes:
+
 kzmin = 1.e-7
 kzmax = 1.e-0
 salmin = 34.6
@@ -25,6 +26,7 @@ so4max = 30000
 h2smax = 3
 s0max = 3
 s2o3max = 12 
+o2min = 0
 o2max = 500
 nh4max = 10
 no2max = 2
@@ -75,6 +77,7 @@ sed_so4max = 30000
 sed_h2smax = 1200
 sed_s0max = 200
 sed_s2o3max = 160
+sed_o2min = 0
 sed_o2max = 200
 sed_nh4max = 1500
 sed_no2max = 10
@@ -126,3 +129,10 @@ labelaxis2_y = 1.15
 labelaxis3_y = 1.26
 labelaxis4_y = 1.38
 labelaxis5_y = 1.48
+
+
+wat_color = '#c9ecfd' #colors for filling water,bbl and sedimnet 
+bbl_color = '#2873b8' 
+sed_color = '#916012'
+
+xlabel_fontsize = 12
