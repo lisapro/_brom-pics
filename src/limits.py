@@ -3,6 +3,7 @@ Created on 8. jul. 2016
 
 @author: ELP
 '''
+import numpy as np
 #depth limits for Water,BBL, and Sediment
 y1min = 0
 y1max = 109
@@ -13,8 +14,21 @@ y3max = 10 #110.10
 ysedmin = -8 #for depth in cm
 ysedmax = 10
 
-#limits for x at Water and BBL axes:
 
+#for filling the font
+y2min_fill_bbl = y2max_fill_water = 109.5 #BBL-water interface
+y3max_fill_bbl = 0
+y3min_fill_sed = 0
+xticks =(np.arange(0,100000))
+
+wat_color = '#c9ecfd' #colors for filling water,bbl and sedimnet 
+bbl_color = '#2873b8' 
+sed_color = '#916012'
+alpha_wat = 0.3 # saturation of color (from 0 to 1) 
+alpha_bbl = 0.3
+alpha_sed = 0.5
+
+#limits for x at Water and BBL axes:
 kzmin = 1.e-7
 kzmax = 1.e-0
 salmin = 34.6
