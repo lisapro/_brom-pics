@@ -17,22 +17,115 @@ my_example_nc_file = 'BROM_out.nc'
 fh = Dataset(my_example_nc_file, mode='r')
 
 depth = fh.variables['z'][:] #middle points
+depth2 = fh.variables['z2'][:] #at interfaces 
+kz = fh.variables['Kz'][:]
+kz_par = fh.variables['Kz_par'][:]
+kz_sol = fh.variables['Kz_sol'][:]
 
+
+def calculate_watmax():
+    for n in range(0,(len(depth2)-1)):
+#        if depth[_]-depth[_?]
+        if depth2[n+1] - depth2[n] >= 0.5:
+            pass
+        elif depth2[n+1] - depth2[n] < 0.50:
+#            watmax =  depth[n],depth[n]-depth[n+1],n
+#            y1max =np.ceil(depth2[n])    
+            y1max = (depth2[n])                     
+#            print y1max,depth[n+1],depth[n],depth[n+1]-depth[n]
+#            print 'y1max', y1max
+#            print 'ynmax', ynmax             
+            return y1max
+            break
+
+      
+#print kz[numday,n]
+def calculate_bblmax():
+    for n in range(0,(len(depth2)-1)):
+        if kz[1,n] == 0:
+            y2max =depth2[n]    
+#            print 'y2max', y2max       
+            return y2max
+            break        
+ 
+def y2max_fill_water():
+    for n in range(0,(len(depth2)-1)):
+#        if depth[_]-depth[_?]
+        if depth2[n+1] - depth2[n] >= 0.5:
+            pass
+        elif depth2[n+1] - depth2[n] < 0.50:
+#            watmax =  depth[n],depth[n]-depth[n+1],n
+            y2max_fill_water = depth2[n]            
+#            print y1max,depth[n+1],depth[n],depth[n+1]-depth[n]
+#            print 'y2max_fill_water',y2max_fill_water
+            return y2max_fill_water
+            break 
+   
 y1min = 0
-y1max = 109
-y2min = 109 #depth[len(depth[:])-19]#108.5
-y2max = 110.0 #(sed_wat interface)#depth[len(depth[:])-13]#
-y3min = -10 #109.91
-y3max = 10 #110.10
-ysedmin = depth[len(depth[:])-15]#109.9 #for depth in m
-ysedmax = depth[len(depth[:])-1]#110.1
+y1max = calculate_watmax()
+
+#y2min = y1max #109 #depth[len(depth[:])-19]#108.5
+y2max = calculate_bblmax() #110.0 #(sed_wat interface)#depth[len(depth[:])-13]#
+y2min = y2max - 2*(y2max - y1max)   #calculate the position of y2min, for catching part of BBL 
+#print 'y2min', y2min
+y2min_fill_bbl = y2max_fill_water = y1max #y2max_fill_water() #109.5 #BBL-water interface
+ysedmax_fill_bbl = ysedmin_fill_sed = 0
+
+#y2max = 110 #(sed_wat interface)
+to_float = []
+for item in depth:
+    to_float.append(float(item)) #make a list of floats from tuple 
+depth_sed = [] # list for storing final depth data for sediment 
+v=0  
+for i in to_float:
+    v = (i- y2max)*100  #convert depth from m to cm
+    depth_sed.append(v)
+
+to_float2 = []
+for item in depth2:
+    to_float2.append(float(item)) #make a list of floats from tuple 
+depth_sed2 = [] # list for storing final depth data for sediment 
+v2=0  
+for i in to_float2:
+    v2 = (i- y2max)*100  #convert depth from m to cm
+    depth_sed2.append(v2) 
+
+def calculate_sedmin():
+    for n in range(0,(len(depth_sed)-1)):
+        if kz[1,n] == 0:
+            ysed = depth_sed[n]  
+            ysedmin =  ysed - 10                
+#            print ysed    
+            return ysedmin
+            break   
+        
+def calculate_sedmax():
+    for n in range(0,(len(depth_sed)-1)):
+        if kz[1,n] == 0:
+            ysed = depth_sed[n]    
+            ysedmax =  ysed + 10              
+#            print ysed    
+            return ysedmax
+            break          
+#calculate_sedmin()        
+        
+#y3min = -10 #109.91
+#y3max = 10 #110.10
+ysedmin = calculate_sedmin()
+#print ysedmin #-10#depth[len(depth[:])-15]#109.9 #for depth in m
+ysedmax = calculate_sedmax()    #10#depth[len(depth[:])-1]#110.1
 #print depth[len(depth[:])-12]
+#print depth_sed2#ysedmin
 
 
 #for filling the font
-y2min_fill_bbl = y2max_fill_water = 109.5 #BBL-water interface
-y3max_fill_bbl = 0
-y3min_fill_sed = 0
+
+
+#ysedmin_fill_bbl = 0
+#y3max_fill_bbl = 0
+#y3min_fill_sed = 0
+
+
 xticks =(np.arange(0,100000))
 
 wat_color = '#c9ecfd' #colors for filling water,bbl and sedimnet 
@@ -153,10 +246,13 @@ def sedmin(variable):
     n = np.ceil(variable[:,-15:].min())
     return n
 
+
+    
+    
 time = fh.variables['time']
 
-depth2 = fh.variables['z2'][:] #at interfaces 
-kz = fh.variables['Kz'][:]
+
+
 dic = fh.variables['DIC'][:]
 phy = fh.variables['Phy'][:]
 het = fh.variables['Het'][:]
@@ -349,29 +445,11 @@ camax = watmax(ca)
 sed_camax = sedmax(ca)
 
 
-y2max = 110 #(sed_wat interface)
-to_float = []
-for item in depth:
-    to_float.append(float(item)) #make a list of floats from tuple 
-depth_sed = [] # list for storing final depth data for sediment 
-v=0  
-for i in to_float:
-    v = (i- y2max)*100  #convert depth from m to cm
-    depth_sed.append(v)
-
-to_float2 = []
-for item in depth2:
-    to_float2.append(float(item)) #make a list of floats from tuple 
-depth_sed2 = [] # list for storing final depth data for sediment 
-v2=0  
-for i in to_float2:
-    v2 = (i- y2max)*100  #convert depth from m to cm
-    depth_sed2.append(v2)
 
 
+    
 
 
-#print depth_sed
 
 #print kz
 fh.close()

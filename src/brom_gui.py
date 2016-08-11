@@ -122,9 +122,9 @@ class Window(QtGui.QDialog):
                 axis.fill_between(xticks, y2max_fill_water, y2min, facecolor= wat_color, alpha=alpha_wat) 
                 axis.fill_between(xticks, y2max, y2min_fill_bbl, facecolor= bbl_color, alpha=alpha_bbl)
             elif axis in (ax02,ax12,ax22,ax32,ax42,ax52): #sediment 
-                axis.set_ylim([y3max, y3min])      
-                axis.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)  
-                axis.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alpha_sed)    
+                axis.set_ylim([ysedmax, ysedmin])   #[y3max, y3min]   
+                axis.fill_between(xticks, ysedmax_fill_bbl, ysedmin, facecolor= bbl_color, alpha=alpha_bbl)  
+                axis.fill_between(xticks, ysedmax, ysedmin_fill_sed, facecolor= sed_color, alpha=alpha_sed)    
                 axis.yaxis.set_major_locator(majorLocator)   #define yticks
                 axis.yaxis.set_major_formatter(majorFormatter)
                 axis.yaxis.set_minor_locator(minorLocator)
@@ -640,7 +640,7 @@ class Window(QtGui.QDialog):
                      
         # plot data
         ax00_1.plot(kz[numday],depth2,'g-') 
-        ax01_1.plot(kz[numday],depth2,'go-')  
+        ax01_1.plot(kz[numday],depth2,'go-')  #
         ax02_1.plot(kz[numday],depth_sed2,'go-')                          
         ax00_2.plot(sal[numday],depth,'r-')   
         ax01_2.plot(sal[numday],depth,'ro-')   
@@ -854,8 +854,6 @@ class Window(QtGui.QDialog):
         bbox={'facecolor': bbl_color , 'alpha':0.6, 'pad':10}, fontsize=14, rotation=90,
         transform=ax51.transAxes) 
 
-        
-        
         plt.text(1.1, 0.7,'BBL ', fontweight='bold', # draw legend to BBL
         bbox={'facecolor': bbl_color, 'alpha':0.5, 'pad':10}, fontsize=14, rotation=90,
         transform=ax52.transAxes)
@@ -873,9 +871,9 @@ class Window(QtGui.QDialog):
                 axis.fill_between(xticks, y2max_fill_water, y2min, facecolor= wat_color, alpha=alpha_wat) 
                 axis.fill_between(xticks, y2max, y2min_fill_bbl, facecolor= bbl_color, alpha=alpha_bbl)
             elif axis in (ax02,ax12,ax22,ax32,ax42,ax52): #sediment 
-                axis.set_ylim([y3max, y3min])      
-                axis.fill_between(xticks, y3max_fill_bbl, y3min, facecolor= bbl_color, alpha=alpha_bbl)  
-                axis.fill_between(xticks, y3max, y3min_fill_sed, facecolor= sed_color, alpha=alpha_sed)    
+                axis.set_ylim([ysedmax, ysedmin])      
+                axis.fill_between(xticks, ysedmax_fill_bbl, ysedmin, facecolor= bbl_color, alpha=alpha_bbl)  
+                axis.fill_between(xticks, ysedmax, ysedmin_fill_sed, facecolor= sed_color, alpha=alpha_sed)    
                 axis.yaxis.set_major_locator(majorLocator)
                 axis.yaxis.set_major_formatter(majorFormatter)
                 axis.yaxis.set_minor_locator(minorLocator)
