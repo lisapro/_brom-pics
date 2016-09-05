@@ -7,7 +7,13 @@ __pycache__/
 *~
 # png files
 *.png
+<<<<<<< HEAD
 .project
 .pydevproject
 .settings
 .pyc
+=======
+
+# nc files 
+*.nc
+>>>>>>> 5d80565a421df2f859c06e339611d30f9f15c8f5
