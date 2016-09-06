@@ -251,8 +251,6 @@ def sedmin(variable):
     
 time = fh.variables['time']
 
-
-
 dic = fh.variables['DIC'][:]
 phy = fh.variables['Phy'][:]
 het = fh.variables['Het'][:]
