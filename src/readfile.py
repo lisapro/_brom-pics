@@ -13,7 +13,8 @@ import numpy as np
 
 
 numday = 100
-my_example_nc_file = 'BROM_out.nc'
+my_example_nc_file = 'BROM_Berre_out.nc'#'BROM_out.nc'
+
 fh = Dataset(my_example_nc_file, mode='r')
 
 depth = fh.variables['z'][:] #middle points
